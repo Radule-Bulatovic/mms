@@ -1,26 +1,32 @@
 import React from 'react';
-import logo from './logo.svg';
+import {BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import './App.css';
+import PageRouting from './PageRouting';
+import PrivateRoute from './components/PrivateRoute';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  render() {
+    return (
+      <Router>
+          <Switch>
+            <Route path='/login' component={PageRouting} />
+            <PrivateRoute path='/pocetna' component={PageRouting} />
+            <PrivateRoute path='/prodavnice' component={PageRouting} />
+            <PrivateRoute path='/korisnikoveProdavnice' component={PageRouting} />
+            <PrivateRoute path='/katalogProizvoda' component={PageRouting} />
+            <PrivateRoute path='/korpa' component={PageRouting} />
+            <PrivateRoute path='/finansije' component={PageRouting} />
+            <PrivateRoute path='/dnevniIzvjestaj' component={PageRouting} />
+            <PrivateRoute path='/anketaZaProdavnicu' component={PageRouting} />
+            <PrivateRoute path='/rasporedAdmin' component={PageRouting} />
+            <PrivateRoute path='/raspored' component={PageRouting} />
+            <PrivateRoute path='/dnevniIzvjestajAdmin' component={PageRouting} />
+            <PrivateRoute path='/dnevniIzvjestajAnketa' component={PageRouting} />
+            <PrivateRoute path='/dnevniIzvjestajAnketaKomerc' component={PageRouting} />
+          </Switch>
+      </Router>
+    )
+  }
 }
 
 export default App;
