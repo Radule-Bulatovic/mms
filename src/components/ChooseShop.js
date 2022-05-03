@@ -7,152 +7,31 @@ import ReactLoading from "react-loading";
 import MenuList from "./MenuList";
 
 const ChooseShop = (props) => {
-  const [user, setUser] = useState("");
-  const [companies, setCompanies] = useState("");
-  const [companiesForSelect, setCompaniesForSelect] = useState("");
   const [selectedCompany, setSelectedCompany] = useState([]);
-  const [shops, setShops] = useState("");
-  const [shopsForSelect, setShopsForSelect] = useState("");
   const [selectedShop, setSelectedShop] = useState([]);
   const [isValidCredentials, setIsValidCredentials] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  let storageCompany;
+  const [storageCompany, setStorageCompany] = useState(
+    JSON.parse(localStorage.getItem("company"))
+  );
+  let { user, getCompany, getShops } = props;
 
   useEffect(() => {
-    props.getCompany();
-    if (props.user !== undefined) {
-      if (props.user.length === 0) {
-        storageCompany = JSON.parse(localStorage.getItem("company"));
+    getCompany();
+    if (user !== undefined) {
+      if (user.length === 0) {
         if (storageCompany !== null) {
-          props.getShops(storageCompany.value);
+          getShops(storageCompany.value);
         }
       }
     }
     setIsLoading(false);
-  }, []);
-
-  // static getDerivedStateFromProps(nextProps, prevProps) {
-  //     let _isLoading
-  //     let _user, _companies, shps, _selectedCompany, _selectedShop, _isValidCredentials
-  //     if(nextProps.user !== prevProps.user) {
-  //         _user= nextProps.user.details
-  //         if(nextProps.companies !== prevProps.companies) {
-  //             _isLoading = true
-  //             _selectedCompany = nextProps.selectedCompany
-  //             // _selectedShop = nextProps.selectedShop
-  //             if(nextProps.selectedShop === prevProps.selectedShop) {
-  //                 _selectedShop = []
-  //                 if(nextProps.selectedShop.length === 0) {
-  //                     _isValidCredentials = false
-  //                 } else {
-  //                     _isValidCredentials = true
-  //                 }
-  //             }
-  //             if(nextProps.shops !== prevProps.shops) {
-  //                 _selectedShop = []
-  //                 _isValidCredentials = false
-  //             }
-  //             shps = nextProps.shops.map(shop => {
-  //                 return {
-  //                     value: shop.shop_id,
-  //                     label: shop.shop_name,
-  //                 }
-  //             })
-  //             _companies = nextProps.companies.map(comp => {
-  //                 return {
-  //                     value: comp.company_id,
-  //                     label: comp.company_name,
-  //                     discount: comp.discount
-  //                 }
-  //             })
-  //         }
-
-  //         if(nextProps.selectedCompany === prevProps.selectedCompany) {
-  //             _isLoading = false
-
-  //             _selectedShop = []
-  //             _isValidCredentials = false
-  //             if(nextProps.selectedShop === prevProps.selectedShop) {
-  //                 _selectedCompany = nextProps.selectedCompany
-  //                 _selectedShop = nextProps.selectedShop
-  //                 if(nextProps.selectedShop !== undefined && prevProps.selectedShop !== undefined) {
-  //                     if(nextProps.selectedShop.length === 0 && prevProps.selectedShop.length === 0) {
-  //                         _isValidCredentials = false
-  //                     } else {
-  //                         _isValidCredentials = true
-
-  //                     }
-  //                 }
-
-  //                 // _isValidCredentials = true
-  //             }
-  //             if(nextProps.selectedCompany.length === 0){
-  //                 _isValidCredentials = false
-  //             }
-  //         }
-
-  //         if(nextProps.shops !== prevProps.shops) {
-  //             shps = nextProps.shops.map(shop => {
-  //                 return {
-  //                     value: shop.shop_id,
-  //                     label: shop.shop_name,
-  //                 }
-  //             })
-  //             _selectedCompany = nextProps.selectedCompany
-  //             _selectedShop = nextProps.selectedShop
-  //             if(nextProps.selectedCompany === prevProps.selectedCompany) {
-  //                 _selectedShop = []
-  //                 if(nextProps.selectedCompany.length === 0) {
-  //                     _isValidCredentials = false
-  //                 } else {
-  //                     _isValidCredentials = true
-  //                 }
-  //             }
-  //             if(nextProps.selectedShop === prevProps.selectedShop) {
-  //                 _selectedShop = []
-  //                 if(nextProps.selectedShop.length === 0) {
-  //                     _isValidCredentials = false
-  //                 } else {
-  //                     _isValidCredentials = true
-  //                 }
-  //             }
-
-  //             if(_selectedCompany.length === 0 || _selectedShop.length === 0) {
-  //                 _isValidCredentials = false
-  //             }
-  //         }
-
-  //         if(prevProps.user === undefined) {
-  //             _isLoading = false
-  //             var storageShop = JSON.parse(localStorage.getItem('shop'))
-  //             if(storageShop !== null) {
-  //                 if(storageShop.length === 0) {
-  //                     _isValidCredentials = false
-  //                 } else {
-  //                     _isValidCredentials = true
-  //                 }
-  //             }
-  //         }
-
-  //         return {
-  //             companies: _companies,
-  //             shops: nextProps.shops,
-  //             shopsForSelect: shps,
-  //             user: _user,
-  //             selectedCompany: _selectedCompany,
-  //             selectedShop: _selectedShop,
-  //             isValidCredentials: _isValidCredentials,
-  //             //
-  //             isLoading: _isLoading
-  //         }
-  //     }
-  // }
+  }, [user, getCompany, getShops, storageCompany]);
 
   const changeCompany = (company) => {
     localStorage.setItem("company", JSON.stringify(company));
     localStorage.setItem("shop", JSON.stringify(""));
-    storageCompany = JSON.parse(localStorage.getItem("company"));
+    setStorageCompany(company);
 
     props.addCompany(company);
     props.addShop("");
@@ -160,7 +39,7 @@ const ChooseShop = (props) => {
       props.resetShoppingCart();
     }
 
-    if (user !== undefined) {
+    if (props.user !== undefined) {
       props.getShops(company.value);
     } else {
       props.getShops(storageCompany.value);
@@ -223,7 +102,11 @@ const ChooseShop = (props) => {
                 <input
                   className="form-control setFont setColor"
                   placeholder="Ime"
-                  value={user !== undefined ? user.name : storageUser.name}
+                  value={
+                    props.user.name !== undefined
+                      ? props.user.name
+                      : storageUser.name
+                  }
                   disabled
                   style={{ backgroundColor: "white" }}
                 />
