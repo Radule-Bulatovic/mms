@@ -6,10 +6,12 @@ import GroupForSmall from "./singleComponent/GroupForSmall";
 import SupplierSbarTitleCnt from "../containers/SupplierSbarTitleCnt";
 import { userPath } from "../constants/path";
 import ReactLoading from "react-loading";
+import { SwipeableDrawer } from "@material-ui/core";
 
 const Order = (props) => {
   const [searchArtical, setSearchArtical] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [showDrawer, setShowDrawer] = useState(false);
 
   let storageCompany = JSON.parse(localStorage.getItem("company"));
   let storageShop = JSON.parse(localStorage.getItem("shop"));
@@ -53,6 +55,14 @@ const Order = (props) => {
     setIsLoading(false);
   }, []);
 
+  const openDrawer = () => {
+    setShowDrawer(true);
+  };
+
+  const closeDrawer = () => {
+    setShowDrawer(false);
+  };
+
   const shoppingCartFun = () => {
     let path = userPath.shoppingCart;
     props.history.push(path);
@@ -91,6 +101,7 @@ const Order = (props) => {
 
     // ako se koristi paginacija, npr strana 5...Kada se odaberu novi proizovdi iz grupe, da se paginacija vrati na prvu stranu
     props.getArticlesForGroup(group_id, 1);
+    closeDrawer();
   };
 
   const change = (art) => {
@@ -112,7 +123,7 @@ const Order = (props) => {
           props.articles.current_page
         );
       } else {
-        props.props.getArticlesForCompany(
+        props.getArticlesForCompany(
           props.company.value,
           props.articles.current_page
         );
@@ -182,9 +193,7 @@ const Order = (props) => {
                     className="btn headerBtn shadow"
                     type="button"
                     id="sidebarCollapse"
-                    onClick={() => {
-                      window.jQuery("#sidebar").toggleClass("active");
-                    }}
+                    onClick={openDrawer}
                   >
                     {/* <button className="btn headerBtn shadow" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" > */}
                     <i className="fas fa-align-left"></i>
@@ -204,16 +213,16 @@ const Order = (props) => {
           </nav>
 
           <div className="wrapper bckOrders">
-            <nav
+            <SwipeableDrawer
               id="sidebar"
-              className="navbarStyle"
-              style={{ backgroundColor: "#fff1d8" }}
+              anchor="left"
+              open={showDrawer}
+              onClose={closeDrawer}
+              onOpen={openDrawer}
+              PaperProps={{
+                style: { backgroundColor: "#fff1d8" },
+              }}
             >
-              {/* <nav id="collapseExample" className="collapse navbarStyle" style={{'minWidth': '54%'}}> */}
-              {/* <div className="sidebar-header">
-                                <img src="logo.png" className="user-image logoSidebar" alt="user" />
-                                <h6>MMS</h6>
-                            </div> */}
               <div className="form-group sbHeaderDetails ">
                 <div className="input-group">
                   <div className="input-group-prepend setSpanHeight">
@@ -291,11 +300,8 @@ const Order = (props) => {
                   />
                 </div>
               </div>
-              {/* </div> */}
-              {/* className="list-unstyled components" */}
               <ul className="list-unstyled" style={{ fontSize: "12px" }}>
                 <h6 className="titleCategory">Kategorije proizvoda</h6>
-                {/* <li className="active"> */}
 
                 {props.company.value !== undefined
                   ? props.company.value === "L001" ||
@@ -321,9 +327,7 @@ const Order = (props) => {
                             key={group.id}
                             group_id={group.group_id}
                             group_name={group.group_name}
-                            getArticles={() =>
-                              props.articlesForGroup(group.group_id)
-                            }
+                            getArticles={() => articlesForGroup(group.group_id)}
                           />
                         );
                       })
@@ -350,14 +354,12 @@ const Order = (props) => {
                           key={group.id}
                           group_id={group.group_id}
                           group_name={group.group_name}
-                          getArticles={() =>
-                            props.articlesForGroup(group.group_id)
-                          }
+                          getArticles={() => articlesForGroup(group.group_id)}
                         />
                       );
                     })}
               </ul>
-            </nav>
+            </SwipeableDrawer>
 
             <table className=" table table-striped col-sm-12">
               <thead className="tableHeader">
