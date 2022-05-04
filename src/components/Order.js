@@ -14,29 +14,23 @@ const Order = (props) => {
   let storageCompany = JSON.parse(localStorage.getItem("company"));
   let storageShop = JSON.parse(localStorage.getItem("shop"));
 
-  const {
-    company,
-    getArticlesForCompany,
-    getSuppliersForCompany,
-    getArticles,
-    getAllGroups,
-    articles,
-  } = props;
-
   useEffect(() => {
-    if (company.value !== undefined) {
+    if (props.company.value !== undefined) {
       if (
-        company.value === "L001" ||
-        company.value === "V003" ||
-        company.value === "D020" ||
-        company === "F030" ||
-        company === "M020"
+        props.company.value === "L001" ||
+        props.company.value === "V003" ||
+        props.company.value === "D020" ||
+        props.company === "F030" ||
+        props.company === "M020"
       ) {
-        getArticlesForCompany(company.value, articles.current_page);
-        getSuppliersForCompany(company.value);
+        props.getArticlesForCompany(
+          props.company.value,
+          props.articles.current_page
+        );
+        props.getSuppliersForCompany(props.company.value);
       } else {
-        getArticles(articles.current_page);
-        getAllGroups();
+        props.getArticles(props.articles.current_page);
+        props.getAllGroups();
       }
     } else {
       if (
@@ -46,23 +40,18 @@ const Order = (props) => {
         storageCompany === "F030" ||
         storageCompany === "M020"
       ) {
-        getArticlesForCompany(storageCompany.value, articles.current_page);
-        getSuppliersForCompany(storageCompany.value);
+        props.getArticlesForCompany(
+          storageCompany.value,
+          props.articles.current_page
+        );
+        props.getSuppliersForCompany(storageCompany.value);
       } else {
-        getArticles(articles.current_page);
-        getAllGroups();
+        props.getArticles(props.articles.current_page);
+        props.getAllGroups();
       }
     }
     setIsLoading(false);
-  }, [
-    company,
-    getArticlesForCompany,
-    getSuppliersForCompany,
-    getArticles,
-    getAllGroups,
-    articles,
-    storageCompany,
-  ]);
+  }, []);
 
   const shoppingCartFun = () => {
     let path = userPath.shoppingCart;
@@ -70,9 +59,9 @@ const Order = (props) => {
   };
 
   const showGroup = (supplier_id) => {
-    if (company.value !== undefined) {
+    if (props.company.value !== undefined) {
       props.getCategoriesForSuppCmp(0, 0);
-      props.getCategoriesForSuppCmp(company.value, supplier_id);
+      props.getCategoriesForSuppCmp(props.company.value, supplier_id);
     } else {
       storageCompany = JSON.parse(localStorage.getItem("company"));
       localStorage.setItem("supplier_id", supplier_id);
@@ -83,19 +72,19 @@ const Order = (props) => {
 
   const setActivePage = (current_page) => {
     if (
-      company.value === "L001" ||
-      company.value === "V003" ||
-      company.value === "D020" ||
-      company === "F030" ||
-      company === "M020"
+      props.company.value === "L001" ||
+      props.company.value === "V003" ||
+      props.company.value === "D020" ||
+      props.company === "F030" ||
+      props.company === "M020"
     ) {
-      props.getArticlesForCompany(company.value, current_page);
+      props.getArticlesForCompany(props.company.value, current_page);
     } else {
       props.getArticles(current_page);
     }
   };
 
-  //get articles for group - small company
+  //get props.articles for group - small props.company
   const articlesForGroup = (group_id) => {
     // console.log('current_page = ',current_page);
     // props.getArticlesForGroup(group_id,current_page)
@@ -110,21 +99,24 @@ const Order = (props) => {
 
   const search = () => {
     if (
-      company.value === "L001" ||
-      company.value === "V003" ||
-      company.value === "D020" ||
-      company === "F030" ||
-      company === "M020"
+      props.company.value === "L001" ||
+      props.company.value === "V003" ||
+      props.company.value === "D020" ||
+      props.company === "F030" ||
+      props.company === "M020"
     ) {
       if (searchArtical.length > 0) {
         props.searchArticleForCmp(
-          company.value,
+          props.company.value,
           searchArtical,
           props.articles.current_page
         );
       } else {
-        props.getArticlesForCompany(company.value, props.articles.current_page);
-        props.getSuppliersForCompany(company.value);
+        props.props.getArticlesForCompany(
+          props.company.value,
+          props.articles.current_page
+        );
+        props.getSuppliersForCompany(props.company.value);
       }
     } else {
       if (searchArtical.length > 0) {
@@ -237,8 +229,8 @@ const Order = (props) => {
                     className="form-control sidebarInput shadow"
                     placeholder="Firma"
                     value={
-                      company.label !== undefined
-                        ? company.label
+                      props.company.label !== undefined
+                        ? props.company.label
                         : storageCompany.label
                     }
                     disabled
@@ -290,8 +282,8 @@ const Order = (props) => {
                     className="form-control sidebarInput shadow"
                     placeholder="Firma"
                     value={
-                      company.discount !== undefined
-                        ? company.discount + "%"
+                      props.company.discount !== undefined
+                        ? props.company.discount + "%"
                         : storageCompany.discount + "%"
                     }
                     disabled
@@ -305,11 +297,11 @@ const Order = (props) => {
                 <h6 className="titleCategory">Kategorije proizvoda</h6>
                 {/* <li className="active"> */}
 
-                {company.value !== undefined
-                  ? company.value === "L001" ||
-                    company.value === "V003" ||
-                    company.value === "D020" ||
-                    company === "F030"
+                {props.company.value !== undefined
+                  ? props.company.value === "L001" ||
+                    props.company.value === "V003" ||
+                    props.company.value === "D020" ||
+                    props.company === "F030"
                     ? props.suppliers.map((supp) => {
                         return (
                           <SupplierSbarTitleCnt
@@ -322,14 +314,16 @@ const Order = (props) => {
                           />
                         );
                       })
-                    : // add groups for small company
+                    : // add groups for small props.company
                       props.allGroups.map((group) => {
                         return (
                           <GroupForSmall
                             key={group.id}
                             group_id={group.group_id}
                             group_name={group.group_name}
-                            getArticles={() => articlesForGroup(group.group_id)}
+                            getArticles={() =>
+                              props.articlesForGroup(group.group_id)
+                            }
                           />
                         );
                       })
@@ -349,14 +343,16 @@ const Order = (props) => {
                         />
                       );
                     })
-                  : // add groups for small company
+                  : // add groups for small props.company
                     props.allGroups.map((group) => {
                       return (
                         <GroupForSmall
                           key={group.id}
                           group_id={group.group_id}
                           group_name={group.group_name}
-                          getArticles={() => articlesForGroup(group.group_id)}
+                          getArticles={() =>
+                            props.articlesForGroup(group.group_id)
+                          }
                         />
                       );
                     })}
