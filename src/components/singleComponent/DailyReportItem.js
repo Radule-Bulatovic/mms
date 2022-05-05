@@ -1,20 +1,14 @@
-import React from 'react'
-import { withRouter } from 'react-router-dom'
+import React from "react";
+import { withRouter } from "react-router-dom";
 
-class DailyReportItem extends React.Component {
+const DailyReportItem = (props) => (
+  <tr onClick={props.showItems}>
+    {/* <td className="tableBody cartItem">{props.id}</td> */}
+    <td>{props.company_name}</td>
+    <td>{props.shop_name}</td>
+    {/* <td>{props.status}</td> */}
+    <td>{props.invoice_id}</td>
+  </tr>
+);
 
-
-    render() {
-        return (
-            <tr onClick={this.props.showItems}>
-                {/* <td className="tableBody cartItem">{this.props.id}</td> */}
-                <td >{this.props.company_name}</td>
-                <td >{this.props.shop_name}</td>
-                {/* <td>{this.props.status}</td> */}
-                <td >{this.props.invoice_id}</td>
-            </tr>
-        )
-    }
-}
-
-export default withRouter(DailyReportItem)
+export default withRouter(DailyReportItem);

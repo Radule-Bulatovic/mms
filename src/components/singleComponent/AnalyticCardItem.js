@@ -1,18 +1,19 @@
-import React from 'react'
-import { withRouter } from 'react-router-dom'
-import moment from 'moment'
+import React from "react";
+import { withRouter } from "react-router-dom";
+import moment from "moment";
 
-class AnalyticCardItem extends React.Component {
+const AnalyticCardItem = (props) => (
+  <tr>
+    <td className="leftAlign">
+      {moment(this.props.date).format("DD-MM-YYYY")}
+    </td>
+    <td className="rightAlign">
+      {this.props.dug === ".00" ? "0.00" : this.props.dug}
+    </td>
+    <td className="rightAlign">
+      {this.props.pot === ".00" ? "0.00" : this.props.pot}
+    </td>
+  </tr>
+);
 
-    render() {
-        return (
-            <tr>
-                <td className="leftAlign">{moment(this.props.date).format('DD-MM-YYYY')}</td>
-                <td className="rightAlign">{this.props.dug === ".00" ? "0.00" : this.props.dug}</td>
-                <td className="rightAlign">{this.props.pot === ".00" ? "0.00" : this.props.pot}</td>
-            </tr>
-        )
-    }
-}
-
-export default withRouter(AnalyticCardItem)
+export default withRouter(AnalyticCardItem);

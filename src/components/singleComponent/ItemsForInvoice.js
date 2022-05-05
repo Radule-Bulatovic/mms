@@ -1,19 +1,13 @@
-import React from 'react'
-import { withRouter } from 'react-router-dom'
+import React from "react";
+import { withRouter } from "react-router-dom";
 
-class ItemsForInvoice extends React.Component {
+const ItemsForInvoice = (props) => (
+  <tr>
+    <td>{props.item}</td>
+    <td>{parseInt(props.quantity)}</td>
+    <td>{props.price}</td>
+    <td>{props.discount === ".00" ? "0.00" : props.discount}</td>
+  </tr>
+);
 
-
-    render() {
-        return (
-            <tr>
-                <td >{this.props.item}</td>
-                <td >{parseInt(this.props.quantity)}</td>
-                <td>{this.props.price}</td>
-                <td >{this.props.discount === ".00" ? "0.00" : this.props.discount}</td>
-            </tr>
-        )
-    }
-}
-
-export default withRouter(ItemsForInvoice)
+export default withRouter(ItemsForInvoice);

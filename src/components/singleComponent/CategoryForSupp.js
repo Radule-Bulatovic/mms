@@ -1,15 +1,10 @@
-import React from 'react'
-import { withRouter } from 'react-router-dom'
+import React from "react";
+import { withRouter } from "react-router-dom";
 
-class CaregoryForSupp extends React.Component {
+const CaregoryForSupp = (props) => (
+  <li className="productForCategory" onClick={props.getArticles}>
+    {props.group_name}
+  </li>
+);
 
-    render() {
-        return (
-                <li className="productForCategory" onClick={this.props.getArticles}>
-                    {this.props.group_name}
-                </li> 
-        )
-    }
-}
-
-export default withRouter(CaregoryForSupp)
+export default withRouter(CaregoryForSupp);
