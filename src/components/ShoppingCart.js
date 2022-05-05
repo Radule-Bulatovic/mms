@@ -136,21 +136,6 @@ const ShoppingCart = (props) => {
     let user = JSON.parse(localStorage.getItem("user"));
     let company = JSON.parse(localStorage.getItem("company"));
     let shop = JSON.parse(localStorage.getItem("shop"));
-    header = {
-      id: parseInt(id) + 1,
-      user_id: user.operater,
-      company_id: company.value,
-      shop_id: shop.value,
-      date: _date,
-      kni: 1,
-      storno: 0,
-      preuzeto: 1,
-      datetime: _datetime,
-      brfak: 0,
-      latitude: JSON.parse(localStorage.getItem("latitude")),
-      longitude: JSON.parse(localStorage.getItem("longitude")),
-    };
-    props.setInvoiceHeader(header);
 
     let _items;
     if (props.items.length > 0) {
@@ -183,6 +168,23 @@ const ShoppingCart = (props) => {
       });
     }
 
+    header = {
+      // id: parseInt(id) + 1,
+      user_id: user.operater,
+      company_id: company.value,
+      shop_id: shop.value,
+      date: _date,
+      kni: 1,
+      storno: 0,
+      preuzeto: 1,
+      datetime: _datetime,
+      brfak: 0,
+      latitude: JSON.parse(localStorage.getItem("latitude")),
+      longitude: JSON.parse(localStorage.getItem("longitude")),
+      items: _items,
+    };
+    props.setInvoiceHeader(header);
+
     // _items.forEach(item => {
     //     props.setInvoiceItems(item)
     // });
@@ -190,7 +192,7 @@ const ShoppingCart = (props) => {
     //
     // ITEMS
     //
-    props.setInvoiceItems(_items);
+    // props.setInvoiceItems(_items);
     //
     //END
     //
@@ -245,7 +247,7 @@ const ShoppingCart = (props) => {
     props.resetShoppingCart();
     // resetInvoiceID()
 
-    logout();
+    // logout();
 
     //remove storeSurvey items from local storage
     localStorage.removeItem("survey");
@@ -342,7 +344,7 @@ const ShoppingCart = (props) => {
                 className="imgStyle"
                 src="arrow.png"
                 alt="send"
-                onClick={() => getId()}
+                onClick={() => sendOdrer()}
               />
             </div>
           </div>
@@ -445,7 +447,7 @@ const ShoppingCart = (props) => {
       </div>
 
       <ModalCmp
-        sureMessage="Da li ste sigurni?"
+        sureMessage="Pošalji porudžbinu?"
         showModal={showModal}
         closeModal={closeModal}
         sendOdrer={sendOdrer}
