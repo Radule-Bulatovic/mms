@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import Swal from "sweetalert2";
 import { userPath } from "../constants/path";
+import ModalSuccessOrder from "./ModalSuccessOrder";
 import CurrentUser from "./ui/CurrentUser.tsx";
 import IconButton from "./ui/IconButton.tsx";
 
 const HomePage = (props) => {
-  const [user, setUser] = useState();
   const storageUser = JSON.parse(localStorage.getItem("user"));
+  const [successModal, setSuccessModal] = useState(false);
 
+  const { isWrittenStoreSurvey, isWrittenSchedule } = props;
   useEffect(() => {
     props.restartScheduleHistory();
     props.restartReportReducer();
@@ -16,10 +18,16 @@ const HomePage = (props) => {
     if (props.user.details !== undefined) {
       localStorage.setItem("user", JSON.stringify(props.user.details));
       props.restartStoreSurvey();
-    } else {
-      setUser(localStorage.getItem("user_name"));
     }
   }, []);
+
+  useEffect(() => {
+    if (isWrittenStoreSurvey && isWrittenSchedule) {
+      setSuccessModal(true);
+      props.resetIsWrittenSchedule();
+      props.resetIsWrittenStore();
+    }
+  }, [isWrittenStoreSurvey, isWrittenSchedule]);
 
   const vendorShops = () => {
     let path = userPath.vendorShops;
@@ -27,7 +35,6 @@ const HomePage = (props) => {
   };
 
   const dailyReport = () => {
-    var storageUser = JSON.parse(localStorage.getItem("user"));
     if (parseInt(storageUser.admin) === 1) {
       let path = userPath.dailyReportAdmin;
       props.history.push(path);
@@ -38,8 +45,7 @@ const HomePage = (props) => {
   };
 
   const finance = () => {
-    var user = JSON.parse(localStorage.getItem("user"));
-    if (parseInt(user.admin) === 1) {
+    if (parseInt(storageUser.admin) === 1) {
       let path = userPath.finance;
       props.history.push(path);
     } else {
@@ -53,27 +59,20 @@ const HomePage = (props) => {
     }
   };
 
+  const closeSuccessModal = () => setSuccessModal(false);
+
   const storeSurvey = () => {
-    var user = JSON.parse(localStorage.getItem("user"));
-    if (parseInt(user.admin) === 1) {
+    if (parseInt(storageUser.admin) === 1) {
       let path = userPath.dailyReportStoreSurvey;
       props.history.push(path);
     } else {
       let path = userPath.dailyReportStoreSurveyUser;
       props.history.push(path);
-      // Swal.fire({
-      //     position: 'top-end',
-      //     icon: 'error',
-      //     title: 'Nemate pravo pristupa!',
-      //     showConfirmButton: false,
-      //     timer: 1500
-      //   })
     }
   };
 
   const schedule = () => {
-    var user = JSON.parse(localStorage.getItem("user"));
-    if (parseInt(user.admin) === 1) {
+    if (parseInt(storageUser.admin) === 1) {
       let path = userPath.scheduleAdmin;
       props.history.push(path);
     } else {
@@ -159,6 +158,10 @@ const HomePage = (props) => {
           text={"Logout"}
         />
       </div>
+      <ModalSuccessOrder
+        showModal={successModal}
+        closeModal={closeSuccessModal}
+      />
     </div>
   );
 };
