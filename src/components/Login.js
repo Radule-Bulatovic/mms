@@ -1,33 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
+import { login_request } from "../actions/login.actions";
 import { userPath } from "../constants/path";
 import Loader from "./ui/Loader.tsx";
+import { useDispatch, useSelector } from "react-redux";
 
 const Login = (props) => {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
-  const [error, seterror] = useState("");
   const [isLoading, setisLoading] = useState(false);
 
-  const { error: _error, user: _user } = props;
+  const user = useSelector((state) => state.loginReducer.user);
+  const error = useSelector((state) => state.loginReducer.error);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     resetFields();
   }, []);
 
   useEffect(() => {
-    if (_error?.length > 0 || _error?.length) {
+    if (error) {
       setisLoading(false);
-      seterror("Neuspješan login!");
     }
-  }, [_error]);
+  }, [error]);
 
   useEffect(() => {
-    if (_user?.details?.name !== undefined) {
-      if (_user.details.name.length > 0) {
+    if (user?.details?.name !== undefined) {
+      if (user.details.name.length > 0) {
         goToHomePage();
       }
     }
-  }, [_user]);
+  }, [user]);
 
   const goToHomePage = () => {
     let path = userPath.homePage;
@@ -36,12 +39,10 @@ const Login = (props) => {
 
   const changeEmail = (e) => {
     setemail(e.target.value);
-    seterror("");
   };
 
   const changePassword = (e) => {
     setpassword(e.target.value);
-    seterror("");
   };
 
   const submitForm = (e) => {
@@ -50,14 +51,13 @@ const Login = (props) => {
       email: email,
       password: password,
     };
-    props.login(credentials);
+    dispatch(login_request(credentials));
     setisLoading(true);
   };
 
   const resetFields = () => {
     setemail("");
     setpassword("");
-    seterror("");
   };
 
   return (
@@ -106,7 +106,7 @@ const Login = (props) => {
                   </div>
                   <input
                     className="form-control setFont"
-                    placeholder="********"
+                    placeholder="Password"
                     type="password"
                     value={password || ""}
                     onChange={changePassword}
