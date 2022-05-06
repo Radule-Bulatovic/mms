@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { userPath } from "./constants/path";
-import HomePageCnt from "./containers/HomePageCnt";
 import ChooseShopCnt from "./containers/ChooseShopCnt";
 import VendorShopsCnt from "./containers/VendorShopsCnt";
 import OrderCnt from "./containers/OrderCnt";
@@ -15,6 +14,7 @@ import ScheduleCnt from "./containers/ScheduleCnt";
 import DailyReportStoreSurveyCnt from "./containers/DailyReportStoreSurveyCnt";
 import DailyReportStoreSurveyUserCnt from "./containers/DailyReportStoreSurveyUserCnt";
 import Login from "./components/Login";
+import HomePage from "./components/HomePage";
 
 const routes = [
   {
@@ -24,7 +24,7 @@ const routes = [
   {
     path: userPath.homePage,
     exact: true,
-    main: () => <HomePageCnt />,
+    main: () => <HomePage />,
   },
   {
     path: userPath.shops,

@@ -5,27 +5,52 @@ import { userPath } from "../constants/path";
 import ModalSuccessOrder from "./ModalSuccessOrder";
 import CurrentUser from "./ui/CurrentUser.tsx";
 import IconButton from "./ui/IconButton.tsx";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  resetIsWrittenValue,
+  restartSchedule,
+} from "../actions/schedule.action";
+import { resetReducerReport } from "../actions/report.action";
+import {
+  postStoryServey_failure,
+  resetIsWrittenValueStore,
+  resetStoreSurveyValues,
+} from "../actions/storeSurvey.action";
+import {
+  resetSelectedCompany_success,
+  resetSelectedShop_success,
+} from "../actions/company.actions";
+import { logout_success } from "../actions/login.actions";
 
 const HomePage = (props) => {
+  const user = useSelector((state) => state.loginReducer.user);
+  const isWrittenStoreSurvey = useSelector(
+    (state) => state.storeSurveyReducer.isWritten
+  );
+  const isWrittenSchedule = useSelector(
+    (state) => state.scheduleReducer.isWritten
+  );
+
   const storageUser = JSON.parse(localStorage.getItem("user"));
   const [successModal, setSuccessModal] = useState(false);
 
-  const { isWrittenStoreSurvey, isWrittenSchedule } = props;
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    props.restartScheduleHistory();
-    props.restartReportReducer();
-    props.resetStoreSurveyValues();
-    if (props.user.details !== undefined) {
-      localStorage.setItem("user", JSON.stringify(props.user.details));
-      props.restartStoreSurvey();
+    dispatch(restartSchedule());
+    dispatch(resetReducerReport());
+    dispatch(resetStoreSurveyValues());
+    if (user.details !== undefined) {
+      localStorage.setItem("user", JSON.stringify(user.details));
+      dispatch(postStoryServey_failure());
     }
   }, []);
 
   useEffect(() => {
     if (isWrittenStoreSurvey && isWrittenSchedule) {
       setSuccessModal(true);
-      props.resetIsWrittenSchedule();
-      props.resetIsWrittenStore();
+      dispatch(resetIsWrittenValue());
+      dispatch(resetIsWrittenValueStore());
     }
   }, [isWrittenStoreSurvey, isWrittenSchedule]);
 
@@ -87,9 +112,10 @@ const HomePage = (props) => {
     localStorage.removeItem("shop");
     localStorage.removeItem("cart");
     localStorage.removeItem("user");
-    props.restartStoreSurvey();
-    props.resetSelectedCompany();
-    props.resetSelectedShop();
+    dispatch(postStoryServey_failure());
+    dispatch(resetSelectedCompany_success());
+    dispatch(resetSelectedShop_success());
+    dispatch(logout_success());
     let path = userPath.login;
     props.history.push(path);
   };
@@ -99,8 +125,8 @@ const HomePage = (props) => {
       <div className="col-sm-12 height-styleHome bck">
         <CurrentUser
           user={
-            props.user.details?.name !== undefined
-              ? props.user.details.name
+            user.details?.name !== undefined
+              ? user.details.name
               : storageUser.name
           }
         />
