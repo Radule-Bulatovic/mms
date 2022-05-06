@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import ShoppingCartItemCnt from "../containers/ShoppingCartItemCnt";
 import moment from "moment";
-import ModalCmp from "./ModalCmp";
 import { userPath } from "../constants/path";
 import ReactLoading from "react-loading";
 import Swal from "sweetalert2";
@@ -12,12 +11,11 @@ const ShoppingCart = (props) => {
   const [total, setTotal] = useState(0);
   const [tax, setTax] = useState(0);
   const [id, setId] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { items: _items } = props;
 
   useEffect(() => {
+    if (!JSON.parse(localStorage.getItem("survey"))) goToHomePage();
     navigator.geolocation.getCurrentPosition(function (position) {
       localStorage.setItem("latitude", position.coords.latitude);
       localStorage.setItem("longitude", position.coords.longitude);
@@ -31,26 +29,10 @@ const ShoppingCart = (props) => {
 
   const deleteItem = (item) => props.deleteItem(item);
 
-  const showModalClick = () => setShowModal(true);
-
-  const closeModal = () => setShowModal(false);
-
-  const closeSuccessModal = () => {
-    setShowSuccessModal(false);
-    props.resetIsWrittenStore();
-    props.resetIsWrittenSchedule();
-    props.resetIsWrittenItem();
-
-    let path = userPath.login;
-    props.history.push(path);
-  };
-
   useEffect(() => {
     let sum = [],
       _items = [];
-    let _tax,
-      _isWritten = false;
-    _items = props.items;
+    let _tax;
     let _dsc;
     if (props.items !== undefined) {
       let x = props.items.map((item) => {
@@ -82,8 +64,6 @@ const ShoppingCart = (props) => {
       if (props.user.length === 0) {
         let y;
         _items = JSON.parse(localStorage.getItem("cart"));
-        console.log("setting items");
-        console.log(_items);
         if (JSON.parse(localStorage.getItem("cart")) !== null) {
           y = JSON.parse(localStorage.getItem("cart")).map((item) => {
             if (isNaN(item.discount)) {
@@ -113,23 +93,14 @@ const ShoppingCart = (props) => {
       }
     }
 
-    if (
-      props.isWrittenStoreSurvey &&
-      props.isWrittenSchedule &&
-      props.isWrittenInvoiceItem
-    ) {
-      _isWritten = true;
-    }
-
     setItems(_items);
     setTotal(parseFloat(sum));
     setTax(parseFloat(_tax));
     setId(parseInt(props.id));
-    setShowSuccessModal(_isWritten);
+    setIsLoading(false);
   }, [_items]);
 
   const sendOdrer = () => {
-    let header = [];
     let newDate = new Date();
     let _date = moment(newDate).format("YYYY-MM-DD 00:00:00");
     let _datetime = moment(newDate).format("YYYY-MM-DD hh:mm:ss");
@@ -167,8 +138,7 @@ const ShoppingCart = (props) => {
         };
       });
     }
-
-    header = {
+    let header = {
       // id: parseInt(id) + 1,
       user_id: user.operater,
       company_id: company.value,
@@ -183,24 +153,6 @@ const ShoppingCart = (props) => {
       longitude: JSON.parse(localStorage.getItem("longitude")),
       items: _items,
     };
-    props.setInvoiceHeader(header);
-
-    // _items.forEach(item => {
-    //     props.setInvoiceItems(item)
-    // });
-
-    //
-    // ITEMS
-    //
-    // props.setInvoiceItems(_items);
-    //
-    //END
-    //
-
-    //
-    //ANKETA
-    //
-    // proslijediti laravelu niz/objekat za oba slucaja i items i store survey items
     let surveyObject = JSON.parse(localStorage.getItem("survey")).map(
       (item) => {
         return {
@@ -215,17 +167,6 @@ const ShoppingCart = (props) => {
         };
       }
     );
-    props.storeSurvey(surveyObject);
-    //
-    //END
-    //
-
-    //
-    //RASPORED
-    //
-    //write row in shadule history
-    //
-    //
     let sheduleItem = {
       company_id: company.value,
       company_name: company.label,
@@ -234,65 +175,24 @@ const ShoppingCart = (props) => {
       user_id: user.operater,
       date: _date,
     };
+
+    props.setInvoiceHeader(header);
+    props.storeSurvey(surveyObject);
     props.writeScheduleHist(sheduleItem);
-    //
-    //end
-    //
 
-    //restet store survey status
-    //set isWriten to false
     props.resetStoreSurvey();
-    //
-    closeModal();
     props.resetShoppingCart();
-    // resetInvoiceID()
-
-    // logout();
-
-    //remove storeSurvey items from local storage
     localStorage.removeItem("survey");
     localStorage.removeItem("latitude");
     localStorage.removeItem("longitude");
-  };
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("company");
-    localStorage.removeItem("shop");
     localStorage.removeItem("cart");
-    localStorage.removeItem("user");
-    localStorage.removeItem("latitude");
-    localStorage.removeItem("longitude");
-    props.resetSelectedCompany();
-    props.resetSelectedShop();
 
-    let path = userPath.login;
+    goToHomePage();
+  };
+
+  const goToHomePage = () => {
+    let path = userPath.homePage;
     props.history.push(path);
-  };
-
-  const resetInvoiceID = () => {
-    setId(0);
-    setTotal(0);
-    setTax(0);
-  };
-
-  const getId = () => {
-    if (total > 0) {
-      props.getInvoiceId();
-      setIsLoading(true);
-      setTimeout(() => {
-        setShowModal(true);
-        setIsLoading(false);
-      }, 1500);
-    } else {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: "Korpa je prazna!",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    }
   };
 
   const deleteCart = () => {
@@ -427,7 +327,7 @@ const ShoppingCart = (props) => {
                 className="imgStyle"
                 src="arrow.png"
                 alt="send"
-                onClick={() => getId()}
+                onClick={() => sendOdrer()}
               />
             </div>
           </div>
@@ -442,17 +342,9 @@ const ShoppingCart = (props) => {
           }}
           onClick={deleteCart}
         >
-          Isprazni korpu: {props.items !== null ? props.items.length : 0} Artik.
+          Isprazni korpu: {items !== null ? items.length : 0} Artik.
         </button>
       </div>
-
-      <ModalCmp
-        sureMessage="Pošalji porudžbinu?"
-        showModal={showModal}
-        closeModal={closeModal}
-        sendOdrer={sendOdrer}
-        items={props.items}
-      />
     </div>
   );
 };
