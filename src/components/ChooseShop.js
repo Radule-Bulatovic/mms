@@ -15,7 +15,6 @@ import {
 import { resetShoppingCart_success } from "../actions/shoppingCart.action";
 
 const ChooseShop = (props) => {
-  const [isValidCredentials, setIsValidCredentials] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [storageCompany, setStorageCompany] = useState(
     JSON.parse(localStorage.getItem("company"))
@@ -28,7 +27,9 @@ const ChooseShop = (props) => {
   const selectedCompany = useSelector(
     (state) => state.companyReducer.selectedCompany
   );
-  const selectedShop = useSelector((state) => state.companyReducer.selectedSho);
+  const selectedShop = useSelector(
+    (state) => state.companyReducer.selectedShop
+  );
 
   const dispatch = useDispatch();
 
@@ -60,13 +61,11 @@ const ChooseShop = (props) => {
     } else {
       getShopsForCompany_request(storageCompany.value);
     }
-    setIsValidCredentials(false);
   };
 
   const changeShop = (shop) => {
     localStorage.setItem("shop", JSON.stringify(shop));
     dispatch(addShop_success(shop));
-    setIsValidCredentials(true);
   };
 
   const submitForm = (e) => {
@@ -91,17 +90,6 @@ const ChooseShop = (props) => {
 
   return (
     <div>
-      <button
-        onClick={() => {
-          console.log(user);
-          console.log(selectedCompany);
-          console.log(shops);
-        }}
-      >
-        {" "}
-        test
-      </button>
-      {/* <Header /> */}
       <div className="col-sm-12 height-style bck">
         {isLoading ? (
           <div
@@ -141,8 +129,11 @@ const ChooseShop = (props) => {
                   <Select
                     components={{ MenuList }}
                     placeholder="Izaberite firmu"
-                    // value={user !== undefined ? selectedCompany : JSON.parse(localStorage.getItem('company'))}
-                    value={JSON.parse(localStorage.getItem("company"))}
+                    value={
+                      selectedCompany?.value
+                        ? selectedCompany
+                        : JSON.parse(localStorage.getItem("company"))
+                    }
                     options={companies.map((comp) => {
                       return {
                         value: comp.company_id,
@@ -157,8 +148,11 @@ const ChooseShop = (props) => {
                   <Select
                     components={{ MenuList }}
                     placeholder="Izaberite objekat"
-                    // value={user !== undefined ? selectedShop : JSON.parse(localStorage.getItem('shop'))}
-                    value={JSON.parse(localStorage.getItem("shop"))}
+                    value={
+                      selectedShop?.value
+                        ? selectedShop
+                        : JSON.parse(localStorage.getItem("shop"))
+                    }
                     options={shops.map((shop) => {
                       return {
                         value: shop.shop_id,
