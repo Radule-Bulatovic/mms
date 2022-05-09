@@ -5,14 +5,62 @@ import moment from "moment";
 import { userPath } from "../constants/path";
 import ReactLoading from "react-loading";
 import Swal from "sweetalert2";
+import { useSelector, useDispatch } from "react-redux";
+import { setInvoiceHeader_request } from "../actions/invoice.action";
+import {
+  deleteItem_success,
+  resetShoppingCart_success,
+} from "../actions/shoppingCart.action";
+import { postStoryServey_request } from "../actions/storeSurvey.action";
+import { writeScheduleHist_request } from "../actions/schedule.action";
 
 const ShoppingCart = (props) => {
-  const [items, setItems] = useState([]);
-  const [total, setTotal] = useState(0);
-  const [tax, setTax] = useState(0);
-  const [id, setId] = useState("");
+  const dispatch = useDispatch();
+
+  const items = useSelector((state) => {
+    console.log(state.shoppingCartReducer);
+    return state.shoppingCartReducer.items;
+  });
+  const [total, setTotal] = useState(true);
+  const [tax, setTax] = useState(true);
+  const [id, setId] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
-  const { items: _items } = props;
+
+  console.log("total", total);
+  console.log("tax", tax);
+
+  const ItemEl =
+    items.length !== 0
+      ? items.map((item, index) => {
+          return (
+            <ShoppingCartItemCnt
+              // key={item.article_id}
+              key={index}
+              counter={index + 1}
+              id={item.article_id}
+              name={item.article_name}
+              quantity={item.quantity}
+              price={item.price}
+              discount={item.discount}
+              // tax={item.tax}
+              deleteItem={() => dispatch(deleteItem_success(item))}
+            />
+          );
+        })
+      : JSON.parse(localStorage.getItem("cart")).map((item, index) => (
+          <ShoppingCartItemCnt
+            // key={item.article_id}
+            key={index}
+            counter={index + 1}
+            id={item.article_id}
+            name={item.article_name}
+            quantity={item.quantity}
+            price={item.price}
+            discount={item.discount}
+            // tax={item.tax}
+            deleteItem={() => dispatch(deleteItem_success(item))}
+          />
+        ));
 
   useEffect(() => {
     if (!JSON.parse(localStorage.getItem("survey"))) goToHomePage();
@@ -27,15 +75,15 @@ const ShoppingCart = (props) => {
     props.history.push(path);
   };
 
-  const deleteItem = (item) => props.deleteItem(item);
-
   useEffect(() => {
-    let sum = [],
-      _items = [];
+    let sum = [];
     let _tax;
     let _dsc;
-    if (props.items !== undefined) {
-      let x = props.items.map((item) => {
+    let _items = items.length
+      ? items
+      : JSON.parse(localStorage.getItem("cart"));
+    if (_items !== undefined) {
+      let x = _items.map((item) => {
         if (isNaN(item.discount)) {
           _dsc = 0;
         } else {
@@ -47,7 +95,7 @@ const ShoppingCart = (props) => {
         sum = x.reduce((result, number) => result + number).toFixed(2);
       }
 
-      let _tax2 = props.items.map((item) => {
+      let _tax2 = _items.map((item) => {
         return (
           ((item.quantity * parseFloat(item.price) * (100 - _dsc)) / 100) *
           parseFloat(item.tax)
@@ -56,12 +104,12 @@ const ShoppingCart = (props) => {
       if (_tax2.length > 0) {
         _tax = _tax2.reduce((result, number) => result + number).toFixed(2);
       }
-      if (props.items.length === 0) {
+      if (_items.length === 0) {
         _items = JSON.parse(localStorage.getItem("cart"));
       }
     }
-    if (props.user !== undefined) {
-      if (props.user.length === 0) {
+    if (JSON.parse(localStorage.getItem("user")) !== undefined) {
+      if (JSON.parse(localStorage.getItem("user")).length === 0) {
         let y;
         _items = JSON.parse(localStorage.getItem("cart"));
         if (JSON.parse(localStorage.getItem("cart")) !== null) {
@@ -92,13 +140,11 @@ const ShoppingCart = (props) => {
         }
       }
     }
-
-    setItems(_items);
     setTotal(parseFloat(sum));
     setTax(parseFloat(_tax));
-    setId(parseInt(props.id));
+    setId(parseInt(id));
     setIsLoading(false);
-  }, [_items]);
+  }, [items]);
 
   const sendOdrer = () => {
     let newDate = new Date();
@@ -109,8 +155,8 @@ const ShoppingCart = (props) => {
     let shop = JSON.parse(localStorage.getItem("shop"));
 
     let _items;
-    if (props.items.length > 0) {
-      _items = props.items.map((item, index) => {
+    if (items.length > 0) {
+      _items = items.map((item, index) => {
         return {
           rbr: index + 1,
           broj: parseInt(id) + 1,
@@ -176,12 +222,11 @@ const ShoppingCart = (props) => {
       date: _date,
     };
 
-    props.setInvoiceHeader(header);
-    props.storeSurvey(surveyObject);
-    props.writeScheduleHist(sheduleItem);
+    dispatch(setInvoiceHeader_request(header));
+    dispatch(postStoryServey_request(surveyObject));
+    dispatch(writeScheduleHist_request(sheduleItem));
 
-    props.resetStoreSurvey();
-    props.resetShoppingCart();
+    dispatch(resetShoppingCart_success());
     localStorage.removeItem("survey");
     localStorage.removeItem("latitude");
     localStorage.removeItem("longitude");
@@ -205,7 +250,7 @@ const ShoppingCart = (props) => {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem("cart");
-        props.resetShoppingCart();
+        resetShoppingCart_success();
         Swal.fire("Obrisana!", "Korpa je uspješno obrisana!", "success");
         let path = "/katalogProizvoda";
         props.history.push(path);
@@ -261,28 +306,7 @@ const ShoppingCart = (props) => {
                 <th className="thCart"></th>
               </tr>
             </thead>
-            <tbody>
-              {items !== null ? (
-                items.map((item, index) => {
-                  return (
-                    <ShoppingCartItemCnt
-                      // key={item.article_id}
-                      key={index}
-                      counter={index + 1}
-                      id={item.article_id}
-                      name={item.article_name}
-                      quantity={item.quantity}
-                      price={item.price}
-                      discount={item.discount}
-                      // tax={item.tax}
-                      deleteItem={() => deleteItem(item)}
-                    />
-                  );
-                })
-              ) : (
-                <tr></tr>
-              )}
-            </tbody>
+            <tbody>{ItemEl}</tbody>
           </table>
         </div>
 
@@ -291,16 +315,17 @@ const ShoppingCart = (props) => {
           <div className="col-sm-4 col-md-4"></div>
           <div className="form-group col-sm-3 col-md-4">
             <label>Ukupno:</label>
+
             <input
               type="text"
               className="form-control inpytCart"
-              value={isNaN(total) ? 0 : total.toFixed(2)}
+              value={isNaN(total) ? 0 : total}
               readOnly
             />
             <input
               type="text"
               className="form-control inpytCart"
-              value={isNaN(tax) ? 0 : tax.toFixed(2)}
+              value={isNaN(tax) ? 0 : tax}
               readOnly
             />
             <input
