@@ -71,8 +71,11 @@ const ChooseShop = (props) => {
 
   const submitForm = (e) => {
     e.preventDefault();
-    if (isValidCredentials) {
-      addShop_success(selectedShop);
+    if (
+      JSON.parse(localStorage.getItem("company"))?.value !== undefined &&
+      JSON.parse(localStorage.getItem("shop"))?.value !== undefined
+    ) {
+      dispatch(addShop_success(selectedShop));
       let path = userPath.storeSurvey;
       props.history.push(path);
     } else {
