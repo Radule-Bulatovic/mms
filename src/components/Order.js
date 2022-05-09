@@ -7,8 +7,30 @@ import SupplierSbarTitleCnt from "../containers/SupplierSbarTitleCnt";
 import { userPath } from "../constants/path";
 import ReactLoading from "react-loading";
 import { SwipeableDrawer } from "@material-ui/core";
+import {
+  getArticleForCompany_request,
+  getArticlesForGroup_request,
+  getArticles_request,
+  searchAllArticle_request,
+  searchArticleForCmp_request,
+} from "../actions/article.action";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getCategoryForSuppCmp_request,
+  getSuppForCmp_request,
+} from "../actions/category.actions";
+import { getGroups_request } from "../actions/group.action";
 
 const Order = (props) => {
+  const dispatch = useDispatch();
+
+  const company = useSelector((state) => state.companyReducer.selectedCompany);
+  const shop = useSelector((state) => state.companyReducer.selectedShop);
+  const articles = useSelector((state) => state.articleReducer.articles);
+  const suppliers = useSelector((state) => state.orderReducer.suppliers);
+  const categories = useSelector((state) => state.orderReducer.categories);
+  const allGroups = useSelector((state) => state.groupReducer.groups);
+
   const [searchArtical, setSearchArtical] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [showDrawer, setShowDrawer] = useState(false);
@@ -17,39 +39,40 @@ const Order = (props) => {
   let storageShop = JSON.parse(localStorage.getItem("shop"));
 
   useEffect(() => {
-    if (props.company.value !== undefined) {
+    if (company.value !== undefined) {
       if (
-        props.company.value === "L001" ||
-        props.company.value === "V003" ||
-        props.company.value === "D020" ||
-        props.company === "F030" ||
-        props.company === "M020"
+        company.value === "L001" ||
+        company.value === "V003" ||
+        company.value === "D020" ||
+        company === "F030" ||
+        company === "M020"
       ) {
-        props.getArticlesForCompany(
-          props.company.value,
-          props.articles.current_page
+        dispatch(
+          getArticleForCompany_request(company.value, articles.current_page)
         );
-        props.getSuppliersForCompany(props.company.value);
+        dispatch(getSuppForCmp_request(company.value));
       } else {
-        props.getArticles(props.articles.current_page);
-        props.getAllGroups();
+        dispatch(getArticles_request(articles.current_page));
+        dispatch(getGroups_request());
       }
     } else {
       if (
         storageCompany.value === "L001" ||
         storageCompany.value === "V003" ||
         storageCompany.value === "D020" ||
-        storageCompany === "F030" ||
-        storageCompany === "M020"
+        storageCompany.value === "F030" ||
+        storageCompany.value === "M020"
       ) {
-        props.getArticlesForCompany(
-          storageCompany.value,
-          props.articles.current_page
+        dispatch(
+          getArticleForCompany_request(
+            storageCompany.value,
+            articles.current_page
+          )
         );
-        props.getSuppliersForCompany(storageCompany.value);
+        dispatch(getSuppForCmp_request(storageCompany.value));
       } else {
-        props.getArticles(props.articles.current_page);
-        props.getAllGroups();
+        dispatch(getArticles_request(articles.current_page));
+        dispatch(getGroups_request());
       }
     }
     setIsLoading(false);
@@ -69,38 +92,36 @@ const Order = (props) => {
   };
 
   const showGroup = (supplier_id) => {
-    if (props.company.value !== undefined) {
-      props.getCategoriesForSuppCmp(0, 0);
-      props.getCategoriesForSuppCmp(props.company.value, supplier_id);
+    if (company.value !== undefined) {
+      dispatch(getCategoryForSuppCmp_request(0, 0));
+      dispatch(getCategoryForSuppCmp_request(company.value, supplier_id));
     } else {
       storageCompany = JSON.parse(localStorage.getItem("company"));
       localStorage.setItem("supplier_id", supplier_id);
-      props.getCategoriesForSuppCmp(0, 0);
-      props.getCategoriesForSuppCmp(storageCompany.value, supplier_id);
+      dispatch(getCategoryForSuppCmp_request(0, 0));
+      dispatch(
+        getCategoryForSuppCmp_request(storageCompany.value, supplier_id)
+      );
     }
   };
 
   const setActivePage = (current_page) => {
     if (
-      props.company.value === "L001" ||
-      props.company.value === "V003" ||
-      props.company.value === "D020" ||
-      props.company === "F030" ||
-      props.company === "M020"
+      company.value === "L001" ||
+      company.value === "V003" ||
+      company.value === "D020" ||
+      company === "F030" ||
+      company === "M020"
     ) {
-      props.getArticlesForCompany(props.company.value, current_page);
+      dispatch(getArticleForCompany_request(company.value, current_page));
     } else {
-      props.getArticles(current_page);
+      dispatch(getArticles_request(current_page));
     }
   };
 
-  //get props.articles for group - small props.company
+  //get articles for group - small company
   const articlesForGroup = (group_id) => {
-    // console.log('current_page = ',current_page);
-    // props.getArticlesForGroup(group_id,current_page)
-
-    // ako se koristi paginacija, npr strana 5...Kada se odaberu novi proizovdi iz grupe, da se paginacija vrati na prvu stranu
-    props.getArticlesForGroup(group_id, 1);
+    dispatch(getArticlesForGroup_request(group_id, 1));
     closeDrawer();
   };
 
@@ -110,33 +131,34 @@ const Order = (props) => {
 
   const search = () => {
     if (
-      props.company.value === "L001" ||
-      props.company.value === "V003" ||
-      props.company.value === "D020" ||
-      props.company === "F030" ||
-      props.company === "M020"
+      company.value === "L001" ||
+      company.value === "V003" ||
+      company.value === "D020" ||
+      company === "F030" ||
+      company === "M020"
     ) {
       if (searchArtical.length > 0) {
-        props.searchArticleForCmp(
-          props.company.value,
-          searchArtical,
-          props.articles.current_page
+        dispatch(
+          searchArticleForCmp_request(
+            company.value,
+            searchArtical,
+            articles.current_page
+          )
         );
       } else {
-        props.getArticlesForCompany(
-          props.company.value,
-          props.articles.current_page
+        dispatch(
+          getArticleForCompany_request(company.value, articles.current_page)
         );
-        props.getSuppliersForCompany(props.company.value);
+        dispatch(getSuppForCmp_request(company.value));
       }
     } else {
       if (searchArtical.length > 0) {
-        // console.log('> 0');
-        props.searchAllArticles(searchArtical, props.articles.current_page);
+        dispatch(
+          searchAllArticle_request(searchArtical, articles.current_page)
+        );
       } else {
-        // console.log('else');
-        props.getArticles(props.articles.current_page);
-        props.getAllGroups();
+        dispatch(getArticles_request(articles.current_page));
+        dispatch(getGroups_request());
       }
     }
     setSearchArtical("");
@@ -195,7 +217,6 @@ const Order = (props) => {
                     id="sidebarCollapse"
                     onClick={openDrawer}
                   >
-                    {/* <button className="btn headerBtn shadow" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" > */}
                     <i className="fas fa-align-left"></i>
                   </button>
                 </li>
@@ -238,8 +259,8 @@ const Order = (props) => {
                     className="form-control sidebarInput shadow"
                     placeholder="Firma"
                     value={
-                      props.company.label !== undefined
-                        ? props.company.label
+                      company.label !== undefined
+                        ? company.label
                         : storageCompany.label
                     }
                     disabled
@@ -263,9 +284,7 @@ const Order = (props) => {
                     className="form-control sidebarInput shadow"
                     placeholder="Objekat"
                     value={
-                      props.shop.label !== undefined
-                        ? props.shop.label
-                        : storageShop.label
+                      shop?.label !== undefined ? shop.label : storageShop.label
                     }
                     disabled
                     style={{ backgroundColor: "white" }}
@@ -291,8 +310,8 @@ const Order = (props) => {
                     className="form-control sidebarInput shadow"
                     placeholder="Firma"
                     value={
-                      props.company.discount !== undefined
-                        ? props.company.discount + "%"
+                      company.discount !== undefined
+                        ? company.discount + "%"
                         : storageCompany.discount + "%"
                     }
                     disabled
@@ -303,25 +322,25 @@ const Order = (props) => {
               <ul className="list-unstyled" style={{ fontSize: "12px" }}>
                 <h6 className="titleCategory">Kategorije proizvoda</h6>
 
-                {props.company.value !== undefined
-                  ? props.company.value === "L001" ||
-                    props.company.value === "V003" ||
-                    props.company.value === "D020" ||
-                    props.company === "F030"
-                    ? props.suppliers.map((supp) => {
+                {company.value !== undefined
+                  ? company.value === "L001" ||
+                    company.value === "V003" ||
+                    company.value === "D020" ||
+                    company === "F030"
+                    ? suppliers.map((supp) => {
                         return (
                           <SupplierSbarTitleCnt
                             key={supp.id}
                             supp_id={supp.supplier_id}
                             supplier_name={supp.supplier_name}
                             showGroup={() => showGroup(supp.supplier_id)}
-                            categories={props.categories}
+                            categories={categories}
                             supplier_id={supp.supplier_id}
                           />
                         );
                       })
-                    : // add groups for small props.company
-                      props.allGroups.map((group) => {
+                    : // add groups for small company
+                      allGroups.map((group) => {
                         return (
                           <GroupForSmall
                             key={group.id}
@@ -335,20 +354,20 @@ const Order = (props) => {
                     storageCompany.value === "V003" ||
                     storageCompany.value === "D020" ||
                     storageCompany === "F030"
-                  ? props.suppliers.map((supp) => {
+                  ? suppliers.map((supp) => {
                       return (
                         <SupplierSbarTitleCnt
                           key={supp.id}
                           supp_id={supp.supplier_id}
                           supplier_name={supp.supplier_name}
                           showGroup={() => showGroup(supp.supplier_id)}
-                          categories={props.categories}
+                          categories={categories}
                           supplier_id={supp.supplier_id}
                         />
                       );
                     })
-                  : // add groups for small props.company
-                    props.allGroups.map((group) => {
+                  : // add groups for small company
+                    allGroups.map((group) => {
                       return (
                         <GroupForSmall
                           key={group.id}
@@ -364,14 +383,8 @@ const Order = (props) => {
             <table className=" table table-striped col-sm-12">
               <thead className="tableHeader">
                 <tr className="sortCursor">
-                  <th className="thCartName">
-                    {/* <span className="fa fa-sort"></span> */}
-                    Naziv
-                  </th>
-                  <th className="thCart">
-                    {/* <span className="fa fa-sort"></span> */}
-                    Lager
-                  </th>
+                  <th className="thCartName">Naziv</th>
+                  <th className="thCart">Lager</th>
                   <th className="thCart">
                     <span className="fa fa-sort spanEuro"></span>
                     &euro;
@@ -381,8 +394,8 @@ const Order = (props) => {
                 </tr>
               </thead>
               <tbody>
-                {props.articles.data !== undefined ? (
-                  props.articles.data.map((article) => {
+                {articles.data !== undefined ? (
+                  articles.data.map((article) => {
                     return (
                       <ArticleCnt
                         key={article.id}
@@ -404,9 +417,9 @@ const Order = (props) => {
                 <tr>
                   <td className="pagination-sm">
                     <Pagination
-                      activePage={props.articles.current_page}
-                      itemsCountPerPage={props.articles.per_page}
-                      totalItemsCount={props.articles.total}
+                      activePage={articles.current_page}
+                      itemsCountPerPage={articles.per_page}
+                      totalItemsCount={articles.total}
                       pageRangeDisplayed={5}
                       onChange={setActivePage}
                       itemClass="page-item"

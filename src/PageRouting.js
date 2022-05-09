@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { userPath } from "./constants/path";
-import OrderCnt from "./containers/OrderCnt";
 import ShoppingCartCnt from "./containers/ShoppingCartCnt";
 import FinanceCnt from "./containers/FinanceCnt";
 import DailyReportCnt from "./containers/DailyReportCnt";
@@ -15,6 +14,7 @@ import Login from "./components/Login";
 import HomePage from "./components/HomePage";
 import VendorShops from "./components/VendorShops";
 import ChooseShop from "./components/ChooseShop";
+import Order from "./components/Order";
 
 const routes = [
   {
@@ -36,7 +36,7 @@ const routes = [
   },
   {
     path: userPath.order,
-    main: () => <OrderCnt />,
+    main: () => <Order />,
   },
   {
     path: userPath.shoppingCart,
