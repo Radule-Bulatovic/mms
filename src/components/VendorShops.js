@@ -5,26 +5,38 @@ import Swal from "sweetalert2";
 import { userPath } from "../constants/path";
 import ReactLoading from "react-loading";
 import MenuList from "./MenuList";
+import {
+  addCompany_success,
+  addShop_success,
+  getShopsForUser_request,
+} from "../actions/company.actions";
+import { useDispatch, useSelector } from "react-redux";
+import { resetShoppingCart_success } from "../actions/shoppingCart.action";
 
 const VendorShops = (props) => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.loginReducer.user);
+  const shopsVendor = useSelector((state) => state.companyReducer.shopsVendor);
+  const selectedShop = useSelector(
+    (state) => state.companyReducer.selectedShop
+  );
+
   const [isValidCredentials, setIsValidCredentials] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const storageCompany = JSON.parse(localStorage.getItem("user"));
 
-  const { user, getShopsForUser } = props;
-
   useEffect(() => {
     if (user.details !== undefined) {
-      getShopsForUser(user.details.operater);
+      dispatch(getShopsForUser_request(user.details.operater));
     } else {
-      getShopsForUser(storageCompany.operater);
+      dispatch(getShopsForUser_request(storageCompany.operater));
     }
     setIsLoading(false);
-  }, [user, getShopsForUser, storageCompany]);
+  }, [user, getShopsForUser_request, storageCompany]);
 
   const changeCompany = (company) => {
-    if (company.value !== props.selectedShop.value) {
-      props.resetShoppingCart();
+    if (company.value !== selectedShop.value) {
+      dispatch(resetShoppingCart_success());
     }
     var _company = {
       value: company.company_id,
@@ -37,8 +49,8 @@ const VendorShops = (props) => {
     };
     localStorage.setItem("company", JSON.stringify(_company));
     localStorage.setItem("shop", JSON.stringify(_shop));
-    props.addCompany(_company);
-    props.addShop(_shop);
+    dispatch(addCompany_success(_company));
+    dispatch(addShop_success(_shop));
     setIsValidCredentials(true);
   };
 
@@ -49,7 +61,6 @@ const VendorShops = (props) => {
 
   const orders = () => {
     if (isValidCredentials || JSON.parse(localStorage.getItem("shop"))) {
-      // let path = userPath.order
       let path = userPath.storeSurvey;
       props.history.push(path);
     } else {
@@ -83,15 +94,14 @@ const VendorShops = (props) => {
               <div className="input-group">
                 <div className="input-group-prepend ">
                   <span className="input-group-text whiteSpan">
-                    {/* <i className="fa fa-user"></i> */}
                     <img className="imgStyle" src="boy.png" alt="user"></img>
                   </span>
                 </div>
                 <input
                   className="form-control setFont setColor"
                   value={
-                    props.user.details !== undefined
-                      ? props.user.details.name
+                    user.details !== undefined
+                      ? user.details.name
                       : storageCompany.name
                   }
                   disabled
@@ -99,7 +109,6 @@ const VendorShops = (props) => {
                 />
               </div>
             </div>
-            {/* <form name="addForm" className="setOpacity" onSubmit={submitForm}> */}
             <div className="box-body">
               <div className="form-group setColor">
                 <h6 className="vendorShopsTitle">
@@ -110,9 +119,8 @@ const VendorShops = (props) => {
                 <Select
                   placeholder="Izaberite prodavnicu"
                   components={{ MenuList }}
-                  // value={state.user !== undefined ? state.selectedShop : JSON.parse(localStorage.getItem('shop'))}
                   value={JSON.parse(localStorage.getItem("shop"))}
-                  options={props.shops.map((shop) => {
+                  options={shopsVendor.map((shop) => {
                     return {
                       value: shop.shop_id,
                       label: shop.shop_name,
@@ -145,7 +153,6 @@ const VendorShops = (props) => {
                 </button>
               </div>
             </div>
-            {/* </form> */}
           </>
         )}
       </div>
