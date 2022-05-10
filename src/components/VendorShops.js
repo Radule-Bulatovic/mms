@@ -32,7 +32,7 @@ const VendorShops = (props) => {
       dispatch(getShopsForUser_request(storageCompany.operater));
     }
     setIsLoading(false);
-  }, [user, getShopsForUser_request, storageCompany]);
+  }, []);
 
   const changeCompany = (company) => {
     if (company.value !== selectedShop.value) {
