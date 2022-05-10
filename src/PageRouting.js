@@ -15,6 +15,7 @@ import VendorShops from "./components/VendorShops";
 import ChooseShop from "./components/ChooseShop";
 import Order from "./components/Order";
 import ShoppingCart from "./components/ShoppingCart";
+import Finance from "./components/Finance";
 
 const routes = [
   {
@@ -44,7 +45,7 @@ const routes = [
   },
   {
     path: userPath.finance,
-    main: () => <FinanceCnt />,
+    main: () => <Finance />,
   },
   {
     path: userPath.dailyReport,

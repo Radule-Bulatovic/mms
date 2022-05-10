@@ -5,18 +5,36 @@ import moment from "moment";
 import Pagination from "react-js-pagination";
 import AnalyticCardItem from "./singleComponent/AnalyticCardItem";
 import MenuList from "./MenuList";
+import {
+  getAnalyticalCard_request,
+  getBalance_out_request,
+  getBalance_request,
+} from "../actions/finance.action";
+import { getCompany_request } from "../actions/company.actions";
+import { useSelector, useDispatch } from "react-redux";
 
-const Finance = (props) => {
+const Finance = () => {
+  const dispatch = useDispatch();
+
+  const analyticCard = useSelector(
+    (state) => state.financeReducer.analyticCard
+  );
+  const companies = useSelector((state) => state.companyReducer.companies);
+  const balanceDetails = useSelector(
+    (state) => state.financeReducer.balanceDetails
+  );
+  const balanceOutDetails = useSelector(
+    (state) => state.financeReducer.balanceOutDetails
+  );
+
   const [selectedCompany, setselectedCompany] = useState([]);
   const [selectedKonto, setselectedKonto] = useState("");
   const [showBalanceDetails, setshowBalanceDetails] = useState(false);
   const [showACdetails, setshowACdetails] = useState(false);
 
-  const { getCompany } = props;
-
   useEffect(() => {
-    getCompany();
-  }, [getCompany]);
+    dispatch(getCompany_request());
+  }, []);
 
   const changeCompany = (company) => {
     if (selectedKonto.length > 0 || selectedKonto !== undefined) {
@@ -49,8 +67,8 @@ const Finance = (props) => {
         konto: konto.value,
         date: _date,
       };
-      props.getBalance(details);
-      props.getBalance_out(details_out);
+      dispatch(getBalance_request(details));
+      dispatch(getBalance_out_request(details_out));
     } else {
       alert("Morate izabrati firmu!");
     }
@@ -62,7 +80,7 @@ const Finance = (props) => {
       supplier_id: selectedCompany.value,
       konto: selectedKonto.value,
     };
-    props.getAnalyticCard(details);
+    dispatch(getAnalyticalCard_request(details));
   };
 
   const setActivePage = (current_page) => {
@@ -71,7 +89,7 @@ const Finance = (props) => {
       konto: selectedKonto.value,
       page: current_page,
     };
-    props.getAnalyticCard(details);
+    dispatch(getAnalyticalCard_request(details));
   };
 
   const options = [
@@ -95,7 +113,7 @@ const Finance = (props) => {
                 components={{ MenuList }}
                 placeholder="Izaberite firmu"
                 value={selectedCompany}
-                options={props.companies.map((comp) => ({
+                options={companies.map((comp) => ({
                   value: comp.company_id,
                   label: comp.company_name,
                 }))}
@@ -112,7 +130,6 @@ const Finance = (props) => {
             </div>
           </div>
         </form>
-
         {showBalanceDetails ? (
           <form name="detailsForm">
             <div className="form-group bananceDetailsForm">
@@ -123,10 +140,9 @@ const Finance = (props) => {
                 readOnly
                 style={{ background: "white", fontWeight: "bold" }}
                 value={
-                  props.balanceOutDetails !== undefined
+                  balanceOutDetails !== undefined
                     ? parseFloat(
-                        props.balanceOutDetails.duguje -
-                          props.balanceOutDetails.potrazuje
+                        balanceOutDetails.duguje - balanceOutDetails.potrazuje
                       ).toLocaleString()
                     : ""
                 }
@@ -140,10 +156,9 @@ const Finance = (props) => {
                 readOnly
                 style={{ background: "white", fontWeight: "bold" }}
                 value={
-                  props.balanceDetails !== undefined
+                  balanceDetails !== undefined
                     ? parseFloat(
-                        props.balanceDetails.duguje -
-                          props.balanceDetails.potrazuje
+                        balanceDetails.duguje - balanceDetails.potrazuje
                       ).toLocaleString()
                     : ""
                 }
@@ -157,8 +172,8 @@ const Finance = (props) => {
                 readOnly
                 style={{ background: "white" }}
                 value={
-                  props.balanceDetails !== undefined
-                    ? parseFloat(props.balanceDetails.duguje).toLocaleString()
+                  balanceDetails !== undefined
+                    ? parseFloat(balanceDetails.duguje).toLocaleString()
                     : ""
                 }
               />
@@ -171,10 +186,8 @@ const Finance = (props) => {
                 readOnly
                 style={{ background: "white" }}
                 value={
-                  props.balanceDetails !== undefined
-                    ? parseFloat(
-                        props.balanceDetails.potrazuje
-                      ).toLocaleString()
+                  balanceDetails !== undefined
+                    ? parseFloat(balanceDetails.potrazuje).toLocaleString()
                     : ""
                 }
               />
@@ -199,8 +212,8 @@ const Finance = (props) => {
               </tr>
             </thead>
             <tbody>
-              {props.analyticCard?.data !== undefined ? (
-                props.analyticCard.data.map((ac, index) => {
+              {analyticCard?.data !== undefined ? (
+                analyticCard.data.map((ac, index) => {
                   return (
                     <AnalyticCardItem
                       key={index}
@@ -218,9 +231,9 @@ const Finance = (props) => {
               <tr>
                 <td className="pagination-sm">
                   <Pagination
-                    activePage={props.analyticCard}
-                    itemsCountPerPage={props.analyticCard.per_page}
-                    totalItemsCount={props.analyticCard.total}
+                    activePage={analyticCard}
+                    itemsCountPerPage={analyticCard.per_page}
+                    totalItemsCount={analyticCard.total}
                     pageRangeDisplayed={5}
                     onChange={setActivePage}
                     itemClass="page-item"
