@@ -60,7 +60,10 @@ const HomePage = (props) => {
   };
 
   const dailyReport = () => {
-    if (parseInt(storageUser.admin) === 1) {
+    if (
+      parseInt(storageUser?.admin) === 1 ||
+      parseInt(user.details?.admin) === 1
+    ) {
       let path = userPath.dailyReportAdmin;
       props.history.push(path);
     } else {
@@ -70,7 +73,10 @@ const HomePage = (props) => {
   };
 
   const finance = () => {
-    if (parseInt(storageUser.admin) === 1) {
+    if (
+      parseInt(storageUser?.admin) === 1 ||
+      parseInt(user.details?.admin) === 1
+    ) {
       let path = userPath.finance;
       props.history.push(path);
     } else {
@@ -87,7 +93,10 @@ const HomePage = (props) => {
   const closeSuccessModal = () => setSuccessModal(false);
 
   const storeSurvey = () => {
-    if (parseInt(storageUser.admin) === 1) {
+    if (
+      parseInt(storageUser?.admin) === 1 ||
+      parseInt(user.details?.admin) === 1
+    ) {
       let path = userPath.dailyReportStoreSurvey;
       props.history.push(path);
     } else {
@@ -97,7 +106,10 @@ const HomePage = (props) => {
   };
 
   const schedule = () => {
-    if (parseInt(storageUser.admin) === 1) {
+    if (
+      parseInt(storageUser?.admin) === 1 ||
+      parseInt(user.details?.admin) === 1
+    ) {
       let path = userPath.scheduleAdmin;
       props.history.push(path);
     } else {
