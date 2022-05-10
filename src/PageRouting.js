@@ -16,6 +16,7 @@ import ChooseShop from "./components/ChooseShop";
 import Order from "./components/Order";
 import ShoppingCart from "./components/ShoppingCart";
 import Finance from "./components/Finance";
+import DailyReport from "./components/DailyReport";
 
 const routes = [
   {
@@ -49,7 +50,7 @@ const routes = [
   },
   {
     path: userPath.dailyReport,
-    main: () => <DailyReportCnt />,
+    main: () => <DailyReport />,
   },
   {
     path: userPath.storeSurvey,

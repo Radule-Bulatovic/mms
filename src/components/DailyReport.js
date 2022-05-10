@@ -7,8 +7,18 @@ import "react-datepicker/dist/react-datepicker.css";
 import DailyReportItem from "./singleComponent/DailyReportItem";
 import ItemsForInvoice from "./singleComponent/ItemsForInvoice";
 import ReactLoading from "react-loading";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  getDailyReport_request,
+  getItemsForInvoice_request,
+} from "../actions/report.action";
 
 const DailyReport = (props) => {
+  const dispatch = useDispatch();
+
+  const invoices = useSelector((state) => state.reportReducer.invoices);
+  const items = useSelector((state) => state.reportReducer.items);
+
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [company_name, setCompany_name] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -20,7 +30,7 @@ const DailyReport = (props) => {
       date: moment(_date).format("YYYY-MM-DD"),
       user: storageUser.operater,
     };
-    props.getInvoicesForDate(details);
+    dispatch(getDailyReport_request(details));
     setIsLoading(false);
   }, []);
 
@@ -31,13 +41,13 @@ const DailyReport = (props) => {
       user: storageUser.operater,
       page: 1,
     };
-    props.getInvoicesForDate(details);
+    dispatch(getDailyReport_request(details));
     setSelectedDate(date);
   };
 
   const showItems = (invoice_id, company_name) => {
     setCompany_name(company_name);
-    props.getItemsForInvoice(invoice_id);
+    dispatch(getItemsForInvoice_request(invoice_id));
   };
 
   return (
@@ -83,17 +93,15 @@ const DailyReport = (props) => {
                     <th className="thAnalticalItem" style={{ width: "50%" }}>
                       Objekat
                     </th>
-                    {/* <th className="thAnalticalItem">
-                                            Status
-                                        </th> */}
+
                     <th className="thAnalticalItem" style={{ width: "10%" }}>
                       Br.Rač
                     </th>
                   </tr>
                 </thead>
                 <tbody style={{ fontSize: "13px" }}>
-                  {props.invoices.length > 0 ? (
-                    props.invoices.map((item, index) => {
+                  {invoices.length > 0 ? (
+                    invoices.map((item, index) => {
                       return (
                         <DailyReportItem
                           key={index}
@@ -119,9 +127,9 @@ const DailyReport = (props) => {
               </table>
 
               <h6 className="vendorShopsTitle">
-                {props.items.length > 0 ? company_name : ""}
+                {items.length > 0 ? company_name : ""}
               </h6>
-              {props.items.length > 0 ? (
+              {items.length > 0 ? (
                 <table className=" table table-striped col-sm-12 dailyTbl">
                   <thead className="tableHeader">
                     <tr className="sortCursor">
@@ -140,8 +148,8 @@ const DailyReport = (props) => {
                     </tr>
                   </thead>
                   <tbody style={{ fontSize: "13px" }}>
-                    {props.items !== undefined ? (
-                      props.items.map((item, index) => {
+                    {items !== undefined ? (
+                      items.map((item, index) => {
                         return (
                           <ItemsForInvoice
                             key={index}
