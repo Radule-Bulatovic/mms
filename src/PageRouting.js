@@ -1,14 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { userPath } from "./constants/path";
-import FinanceCnt from "./containers/FinanceCnt";
-import DailyReportCnt from "./containers/DailyReportCnt";
-import StoreSurveyCnt from "./containers/StoreSurveyCnt";
-import DailyReportAdminCnt from "./containers/DailyReportAdminCnt";
-import ScheduleAdminCnt from "./containers/ScheduleAdminCnt";
-import ScheduleCnt from "./containers/ScheduleCnt";
 import DailyReportStoreSurveyCnt from "./containers/DailyReportStoreSurveyCnt";
-import DailyReportStoreSurveyUserCnt from "./containers/DailyReportStoreSurveyUserCnt";
 import Login from "./components/Login";
 import HomePage from "./components/HomePage";
 import VendorShops from "./components/VendorShops";
@@ -21,6 +14,7 @@ import StoreSurvey from "./components/StoreSurvey";
 import Schedule from "./components/Schedule";
 import ScheduleAdmin from "./components/ScheduleAdmin";
 import DailyReportAdmin from "./components/DailyReportAdmin";
+import DailyReportStoreSurveyUser from "./components/DailyReportStoreSurveyUser";
 
 const routes = [
   {
@@ -78,7 +72,7 @@ const routes = [
   },
   {
     path: userPath.dailyReportStoreSurveyUser,
-    main: () => <DailyReportStoreSurveyUserCnt />,
+    main: () => <DailyReportStoreSurveyUser />,
   },
 ];
 
