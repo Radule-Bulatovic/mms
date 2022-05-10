@@ -20,6 +20,7 @@ import DailyReport from "./components/DailyReport";
 import StoreSurvey from "./components/StoreSurvey";
 import Schedule from "./components/Schedule";
 import ScheduleAdmin from "./components/ScheduleAdmin";
+import DailyReportAdmin from "./components/DailyReportAdmin";
 
 const routes = [
   {
@@ -69,7 +70,7 @@ const routes = [
   },
   {
     path: userPath.dailyReportAdmin,
-    main: () => <DailyReportAdminCnt />,
+    main: () => <DailyReportAdmin />,
   },
   {
     path: userPath.dailyReportStoreSurvey,
