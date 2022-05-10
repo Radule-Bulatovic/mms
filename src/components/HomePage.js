@@ -137,7 +137,7 @@ const HomePage = (props) => {
       <div className="col-sm-12 height-styleHome bck">
         <CurrentUser
           user={
-            user.details?.name !== undefined
+            user?.details?.name !== undefined
               ? user.details.name
               : storageUser.name
           }
