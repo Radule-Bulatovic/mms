@@ -19,6 +19,7 @@ import Finance from "./components/Finance";
 import DailyReport from "./components/DailyReport";
 import StoreSurvey from "./components/StoreSurvey";
 import Schedule from "./components/Schedule";
+import ScheduleAdmin from "./components/ScheduleAdmin";
 
 const routes = [
   {
@@ -60,7 +61,7 @@ const routes = [
   },
   {
     path: userPath.scheduleAdmin,
-    main: () => <ScheduleAdminCnt />,
+    main: () => <ScheduleAdmin />,
   },
   {
     path: userPath.schedule,
