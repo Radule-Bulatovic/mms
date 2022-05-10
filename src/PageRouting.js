@@ -15,6 +15,7 @@ import Schedule from "./components/Schedule";
 import ScheduleAdmin from "./components/ScheduleAdmin";
 import DailyReportAdmin from "./components/DailyReportAdmin";
 import DailyReportStoreSurveyUser from "./components/DailyReportStoreSurveyUser";
+import DailyReportStoreSurvey from "./components/DailyReportStoreSurvey";
 
 const routes = [
   {
@@ -68,7 +69,7 @@ const routes = [
   },
   {
     path: userPath.dailyReportStoreSurvey,
-    main: () => <DailyReportStoreSurveyCnt />,
+    main: () => <DailyReportStoreSurvey />,
   },
   {
     path: userPath.dailyReportStoreSurveyUser,
