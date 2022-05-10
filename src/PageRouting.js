@@ -17,6 +17,7 @@ import Order from "./components/Order";
 import ShoppingCart from "./components/ShoppingCart";
 import Finance from "./components/Finance";
 import DailyReport from "./components/DailyReport";
+import StoreSurvey from "./components/StoreSurvey";
 
 const routes = [
   {
@@ -54,7 +55,7 @@ const routes = [
   },
   {
     path: userPath.storeSurvey,
-    main: () => <StoreSurveyCnt />,
+    main: () => <StoreSurvey />,
   },
   {
     path: userPath.scheduleAdmin,
