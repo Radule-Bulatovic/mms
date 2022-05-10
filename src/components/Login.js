@@ -11,6 +11,7 @@ const Login = (props) => {
   const [isLoading, setisLoading] = useState(false);
 
   const user = useSelector((state) => state.loginReducer.user);
+  const storageUser = JSON.parse(localStorage.getItem("user"));
   const error = useSelector((state) => state.loginReducer.error);
   const dispatch = useDispatch();
 
@@ -25,8 +26,8 @@ const Login = (props) => {
   }, [error]);
 
   useEffect(() => {
-    if (user?.details?.name !== undefined) {
-      if (user.details.name.length > 0) {
+    if (user?.details?.name !== undefined || storageUser?.name !== undefined) {
+      if (user?.details?.name.length > 0 || storageUser.name.length) {
         goToHomePage();
       }
     }
