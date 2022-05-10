@@ -18,7 +18,6 @@ const ShoppingCart = (props) => {
   const dispatch = useDispatch();
 
   const items = useSelector((state) => {
-    console.log(state.shoppingCartReducer);
     return state.shoppingCartReducer.items;
   });
   const [total, setTotal] = useState(true);
@@ -26,28 +25,10 @@ const ShoppingCart = (props) => {
   const [id, setId] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log("total", total);
-  console.log("tax", tax);
-
   const ItemEl =
-    items.length !== 0
-      ? items.map((item, index) => {
-          return (
-            <ShoppingCartItemCnt
-              // key={item.article_id}
-              key={index}
-              counter={index + 1}
-              id={item.article_id}
-              name={item.article_name}
-              quantity={item.quantity}
-              price={item.price}
-              discount={item.discount}
-              // tax={item.tax}
-              deleteItem={() => dispatch(deleteItem_success(item))}
-            />
-          );
-        })
-      : JSON.parse(localStorage.getItem("cart")).map((item, index) => (
+    items.length !== 0 ? (
+      items.map((item, index) => {
+        return (
           <ShoppingCartItemCnt
             // key={item.article_id}
             key={index}
@@ -60,10 +41,30 @@ const ShoppingCart = (props) => {
             // tax={item.tax}
             deleteItem={() => dispatch(deleteItem_success(item))}
           />
-        ));
-
+        );
+      })
+    ) : JSON.parse(localStorage.getItem("cart")) ? (
+      JSON.parse(localStorage.getItem("cart")).map((item, index) => (
+        <ShoppingCartItemCnt
+          // key={item.article_id}
+          key={index}
+          counter={index + 1}
+          id={item.article_id}
+          name={item.article_name}
+          quantity={item.quantity}
+          price={item.price}
+          discount={item.discount}
+          // tax={item.tax}
+          deleteItem={() => dispatch(deleteItem_success(item))}
+        />
+      ))
+    ) : (
+      <tr></tr>
+    );
   useEffect(() => {
-    if (!JSON.parse(localStorage.getItem("survey"))) goToHomePage();
+    if (!JSON.parse(localStorage.getItem("survey"))?.length) {
+      goToHomePage();
+    }
     navigator.geolocation.getCurrentPosition(function (position) {
       localStorage.setItem("latitude", position.coords.latitude);
       localStorage.setItem("longitude", position.coords.longitude);
@@ -82,7 +83,7 @@ const ShoppingCart = (props) => {
     let _items = items.length
       ? items
       : JSON.parse(localStorage.getItem("cart"));
-    if (_items !== undefined) {
+    if (_items) {
       let x = _items.map((item) => {
         if (isNaN(item.discount)) {
           _dsc = 0;
