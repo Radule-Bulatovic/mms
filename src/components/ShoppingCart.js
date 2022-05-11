@@ -147,6 +147,34 @@ const ShoppingCart = (props) => {
     setIsLoading(false);
   }, [items]);
 
+  const showModal = () => {
+    if (
+      JSON.parse(localStorage.getItem("cart"))?.length === 0 ||
+      items.length === 0
+    ) {
+      Swal.fire({
+        icon: "error",
+        title: "Korpa je prazna!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } else {
+      Swal.fire({
+        title: "Zaključi narudžbu?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Potvrdi",
+        cancelButtonText: "Otkaži",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          sendOdrer();
+        }
+      });
+    }
+  };
+
   const sendOdrer = () => {
     let newDate = new Date();
     let _date = moment(newDate).format("YYYY-MM-DD 00:00:00");
@@ -290,7 +318,7 @@ const ShoppingCart = (props) => {
                 className="imgStyle"
                 src="arrow.png"
                 alt="send"
-                onClick={() => sendOdrer()}
+                onClick={showModal}
               />
             </div>
           </div>
@@ -353,7 +381,7 @@ const ShoppingCart = (props) => {
                 className="imgStyle"
                 src="arrow.png"
                 alt="send"
-                onClick={() => sendOdrer()}
+                onClick={showModal}
               />
             </div>
           </div>
