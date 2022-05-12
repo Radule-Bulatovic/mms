@@ -27,6 +27,7 @@ const Order = (props) => {
   const company = useSelector((state) => state.companyReducer.selectedCompany);
   const shop = useSelector((state) => state.companyReducer.selectedShop);
   const articles = useSelector((state) => state.articleReducer.articles);
+  console.log(articles);
   const suppliers = useSelector((state) => state.orderReducer.suppliers);
   const categories = useSelector((state) => state.orderReducer.categories);
   const allGroups = useSelector((state) => state.groupReducer.groups);
@@ -39,42 +40,9 @@ const Order = (props) => {
   let storageShop = JSON.parse(localStorage.getItem("shop"));
 
   useEffect(() => {
-    if (company.value !== undefined) {
-      if (
-        company.value === "L001" ||
-        company.value === "V003" ||
-        company.value === "D020" ||
-        company === "F030" ||
-        company === "M020"
-      ) {
-        dispatch(
-          getArticleForCompany_request(company.value, articles.current_page)
-        );
-        dispatch(getSuppForCmp_request(company.value));
-      } else {
-        dispatch(getArticles_request(articles.current_page));
-        dispatch(getGroups_request());
-      }
-    } else {
-      if (
-        storageCompany.value === "L001" ||
-        storageCompany.value === "V003" ||
-        storageCompany.value === "D020" ||
-        storageCompany.value === "F030" ||
-        storageCompany.value === "M020"
-      ) {
-        dispatch(
-          getArticleForCompany_request(
-            storageCompany.value,
-            articles.current_page
-          )
-        );
-        dispatch(getSuppForCmp_request(storageCompany.value));
-      } else {
-        dispatch(getArticles_request(articles.current_page));
-        dispatch(getGroups_request());
-      }
-    }
+    dispatch(getSuppForCmp_request(storageCompany.value));
+    dispatch(getArticles_request(articles.current_page));
+    dispatch(getGroups_request());
     setIsLoading(false);
   }, []);
 
