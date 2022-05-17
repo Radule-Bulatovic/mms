@@ -27,7 +27,6 @@ const Order = (props) => {
   const company = useSelector((state) => state.companyReducer.selectedCompany);
   const shop = useSelector((state) => state.companyReducer.selectedShop);
   const articles = useSelector((state) => state.articleReducer.articles);
-  console.log(articles);
   const suppliers = useSelector((state) => state.orderReducer.suppliers);
   const categories = useSelector((state) => state.orderReducer.categories);
   const allGroups = useSelector((state) => state.groupReducer.groups);

@@ -24,7 +24,6 @@ const ShoppingCart = (props) => {
   const [tax, setTax] = useState(true);
   const [id, setId] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
-
   const ItemEl =
     items.length !== 0 ? (
       items.map((item, index) => {
@@ -149,16 +148,9 @@ const ShoppingCart = (props) => {
 
   const showModal = () => {
     if (
-      JSON.parse(localStorage.getItem("cart"))?.length === 0 ||
-      items.length === 0
+      items?.length != 0 ||
+      JSON.parse(localStorage.getItem("cart"))?.length
     ) {
-      Swal.fire({
-        icon: "error",
-        title: "Korpa je prazna!",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    } else {
       Swal.fire({
         title: "Zaključi narudžbu?",
         icon: "question",
@@ -171,6 +163,13 @@ const ShoppingCart = (props) => {
         if (result.isConfirmed) {
           sendOdrer();
         }
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Korpa je prazna!",
+        showConfirmButton: false,
+        timer: 1500,
       });
     }
   };
@@ -279,7 +278,7 @@ const ShoppingCart = (props) => {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem("cart");
-        resetShoppingCart_success();
+        dispatch(resetShoppingCart_success());
         Swal.fire("Obrisana!", "Korpa je uspješno obrisana!", "success");
         let path = "/katalogProizvoda";
         props.history.push(path);
@@ -396,7 +395,11 @@ const ShoppingCart = (props) => {
           }}
           onClick={deleteCart}
         >
-          Isprazni korpu: {items !== null ? items.length : 0} Artik.
+          Isprazni korpu:{" "}
+          {items?.length !== 0
+            ? items?.length
+            : JSON.parse(localStorage.getItem("cart"))?.length}{" "}
+          Artik.
         </button>
       </div>
     </div>
