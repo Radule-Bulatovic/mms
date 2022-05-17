@@ -1,14 +1,22 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import CategoryForSupp from "./CategoryForSupp";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getArticlesForGroupSuppCmp_request } from "../../actions/article.action";
 const SupplierSbarTitle = (props) => {
+  const dispatch = useDispatch();
+
+  const company = useSelector((state) => state.companyReducer.selectedCompany);
+  const categories = useSelector((state) => state.orderReducer.categories);
+
   const getArticles = (company_id, supplier_id, group_id) => {
     var storageCompany = JSON.parse(localStorage.getItem("company"));
-    props.getArticlesForGroupSuppCmp(
-      storageCompany.value,
-      supplier_id,
-      group_id
+    dispatch(
+      getArticlesForGroupSuppCmp_request(
+        storageCompany.value,
+        supplier_id,
+        group_id
+      )
     );
   };
 
@@ -43,19 +51,15 @@ const SupplierSbarTitle = (props) => {
       {/* <ul className="collapse list-unstyled" id="homeSubmenu"> */}
       <ul className="collapse list-unstyled" id={`homeSubmenu${props.supp_id}`}>
         {/* <ul className="collapse list-unstyled" id={`#homeSubmenu${props.supp_id}`}> */}
-        {props.categories.length > 0
-          ? props.categories.map((cat) => {
+        {categories.length > 0
+          ? categories.map((cat) => {
               return (
                 <CategoryForSupp
                   key={cat.id}
                   group_id={cat.group_id}
                   group_name={cat.group_name}
                   getArticles={() =>
-                    getArticles(
-                      props.company.value,
-                      props.supplier_id,
-                      cat.group_id
-                    )
+                    getArticles(company.value, props.supplier_id, cat.group_id)
                   }
                 />
               );

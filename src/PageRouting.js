@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { userPath } from "./constants/path";
-import DailyReportStoreSurveyCnt from "./containers/DailyReportStoreSurveyCnt";
 import Login from "./components/Login";
 import HomePage from "./components/HomePage";
 import VendorShops from "./components/VendorShops";

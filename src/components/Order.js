@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import Pagination from "react-js-pagination";
-import ArticleCnt from "../containers/ArticleCnt";
 import GroupForSmall from "./singleComponent/GroupForSmall";
-import SupplierSbarTitleCnt from "../containers/SupplierSbarTitleCnt";
 import { userPath } from "../constants/path";
 import ReactLoading from "react-loading";
 import { SwipeableDrawer } from "@material-ui/core";
@@ -20,6 +18,8 @@ import {
   getSuppForCmp_request,
 } from "../actions/category.actions";
 import { getGroups_request } from "../actions/group.action";
+import Article from "./singleComponent/Article";
+import SupplierSbarTitle from "./singleComponent/SupplierSbarTitle";
 
 const Order = (props) => {
   const dispatch = useDispatch();
@@ -296,7 +296,7 @@ const Order = (props) => {
                     company === "F030"
                     ? suppliers.map((supp) => {
                         return (
-                          <SupplierSbarTitleCnt
+                          <SupplierSbarTitle
                             key={supp.id}
                             supp_id={supp.supplier_id}
                             supplier_name={supp.supplier_name}
@@ -323,7 +323,7 @@ const Order = (props) => {
                     storageCompany === "F030"
                   ? suppliers.map((supp) => {
                       return (
-                        <SupplierSbarTitleCnt
+                        <SupplierSbarTitle
                           key={supp.id}
                           supp_id={supp.supplier_id}
                           supplier_name={supp.supplier_name}
@@ -364,7 +364,7 @@ const Order = (props) => {
                 {articles.data !== undefined ? (
                   articles.data.map((article) => {
                     return (
-                      <ArticleCnt
+                      <Article
                         key={article.id}
                         id={article.article_id}
                         name={article.article_name}

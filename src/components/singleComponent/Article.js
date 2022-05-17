@@ -1,22 +1,14 @@
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
+import { addItem_success } from "../../actions/shoppingCart.action";
 
 const Article = (props) => {
+  const dispatch = useDispatch();
   const [quantity, setquantity] = useState("");
-  const [items, setitems] = useState([]);
-  const [discount, setdiscount] = useState("");
 
   const changeQuantity = (input) => setquantity(parseInt(input.target.value));
-  // static getDerivedStateFromProps(nextProps, prevProps) {
-  //     if(nextProps.items !== prevProps.items) {
-  //         return {
-  //             items : nextProps.items
-
-  //         }
-  //     }
-  //     return null
-  // }
 
   const addItemInCart = () => {
     var cmp = JSON.parse(localStorage.getItem("company"));
@@ -45,7 +37,7 @@ const Article = (props) => {
       }
 
       if (allow) {
-        props.addItem(item);
+        dispatch(addItem_success(item));
         setquantity("");
       } else {
         Swal.fire({

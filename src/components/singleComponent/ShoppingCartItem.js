@@ -1,7 +1,11 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { changeQuantity_success } from "../../actions/shoppingCart.action";
 
 const ShoppingCartItem = (props) => {
+  const dispatch = useDispatch();
+
   const changeQuantity = (input) => {
     let article = {
       id: props.id,
@@ -10,7 +14,7 @@ const ShoppingCartItem = (props) => {
       price: props.price,
       discount: props.discount,
     };
-    props.editQuantity(article);
+    dispatch(changeQuantity_success(article));
   };
 
   const changePrice = () => {};
@@ -27,7 +31,7 @@ const ShoppingCartItem = (props) => {
           discount: parseFloat(input.target.value).toFixed(2),
           tax: props.tax,
         };
-        props.editQuantity(article);
+        dispatch(changeQuantity_success(article));
       }
     } else {
       alert("Unesite ispravan popust!");

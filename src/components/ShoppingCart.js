@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
-import ShoppingCartItemCnt from "../containers/ShoppingCartItemCnt";
 import moment from "moment";
 import { userPath } from "../constants/path";
 import ReactLoading from "react-loading";
@@ -13,6 +12,7 @@ import {
 } from "../actions/shoppingCart.action";
 import { postStoryServey_request } from "../actions/storeSurvey.action";
 import { writeScheduleHist_request } from "../actions/schedule.action";
+import ShoppingCartItem from "./singleComponent/ShoppingCartItem";
 
 const ShoppingCart = (props) => {
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const ShoppingCart = (props) => {
     items.length !== 0 ? (
       items.map((item, index) => {
         return (
-          <ShoppingCartItemCnt
+          <ShoppingCartItem
             // key={item.article_id}
             key={index}
             counter={index + 1}
@@ -44,7 +44,7 @@ const ShoppingCart = (props) => {
       })
     ) : JSON.parse(localStorage.getItem("cart")) ? (
       JSON.parse(localStorage.getItem("cart")).map((item, index) => (
-        <ShoppingCartItemCnt
+        <ShoppingCartItem
           // key={item.article_id}
           key={index}
           counter={index + 1}
