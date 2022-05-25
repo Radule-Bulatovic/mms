@@ -13,6 +13,7 @@ import {
 import { postStoryServey_request } from "../actions/storeSurvey.action";
 import { writeScheduleHist_request } from "../actions/schedule.action";
 import ShoppingCartItem from "./singleComponent/ShoppingCartItem";
+import { Button, IconButton } from "@material-ui/core";
 
 const ShoppingCart = (props) => {
   const dispatch = useDispatch();
@@ -250,15 +251,15 @@ const ShoppingCart = (props) => {
       date: _date,
     };
 
-    dispatch(setInvoiceHeader_request(header));
-    dispatch(postStoryServey_request(surveyObject));
-    dispatch(writeScheduleHist_request(sheduleItem));
-
-    dispatch(resetShoppingCart_success());
     localStorage.removeItem("survey");
     localStorage.removeItem("latitude");
     localStorage.removeItem("longitude");
     localStorage.removeItem("cart");
+
+    dispatch(setInvoiceHeader_request(header));
+    dispatch(postStoryServey_request(surveyObject));
+    dispatch(writeScheduleHist_request(sheduleItem));
+    dispatch(resetShoppingCart_success());
 
     goToHomePage();
   };
@@ -304,21 +305,27 @@ const ShoppingCart = (props) => {
       <div className="col-sm-12 ">
         <div className="row">
           <div className="col-sm-12 cartPadding">
-            <div className="col-sm-6 cartBackImg">
-              <img
-                className="imgStyle"
-                src="back.png"
-                alt="back"
+            <div className="col-sm-12 d-flex justify-content-between cartBackImg">
+              <Button
+                style={{ fontWeight: 700 }}
+                size="large"
+                color="secondary"
+                variant="outlined"
                 onClick={() => backToOrders()}
-              />
-            </div>
-            <div className="col-sm-6 cartNextImg" style={{ width: "30%" }}>
-              <img
-                className="imgStyle"
-                src="arrow.png"
-                alt="send"
+              >
+                {/* <img src="icons8-delete-24.png" style={{ height: "1.5rem" }} /> */}
+                Nazad
+              </Button>
+              <Button
+                style={{ fontWeight: 700 }}
+                size="large"
+                color="primary"
+                variant="outlined"
                 onClick={showModal}
-              />
+              >
+                {/* <img src="icons8-send-32.png" style={{ height: "1.5rem" }} /> */}
+                Naruči
+              </Button>
             </div>
           </div>
         </div>
@@ -365,26 +372,6 @@ const ShoppingCart = (props) => {
           </div>
         </div>
 
-        <div className="row">
-          <div className="col-sm-12 cartPadding">
-            <div className="col-sm-6 cartBackImg">
-              <img
-                className="imgStyle"
-                src="back.png"
-                alt="back"
-                onClick={() => backToOrders()}
-              />
-            </div>
-            <div className="col-sm-6 cartNextImg" style={{ width: "30%" }}>
-              <img
-                className="imgStyle"
-                src="arrow.png"
-                alt="send"
-                onClick={showModal}
-              />
-            </div>
-          </div>
-        </div>
         <button
           className="btn btn-danger surveyButton"
           style={{
