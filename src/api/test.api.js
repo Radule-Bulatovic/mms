@@ -1,7 +1,10 @@
 import axios from "axios";
 
-// var apiUrl = window.location.href.indexOf('mms1.mils.me') >= 0 ? 'https://laravel.mms1.mils.me' : 'http://api.mms.test';
-var apiUrl = "http://127.0.0.1:8000";
+var apiUrl =
+  window.location.href.indexOf("mms1.mils.me") >= 0
+    ? "https://laravel.mms1.mils.me"
+    : "http://api.mms.test";
+// var apiUrl = "http://127.0.0.1:8000";
 var config = {
   headers: { Authorization: "bearer " + localStorage.getItem("token") },
 };
