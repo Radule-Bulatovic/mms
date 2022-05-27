@@ -62,7 +62,6 @@ function DailyReportStoreSurvey(props) {
   }, [storesForComAndDateAndCmpAndSop]);
 
   const changeDate = (date) => {
-    console.log(selectedUser);
     if (selectedUser !== "") {
       setIsLoadingCompany(true);
     }

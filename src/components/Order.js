@@ -73,17 +73,7 @@ const Order = (props) => {
   };
 
   const setActivePage = (current_page) => {
-    if (
-      company.value === "L001" ||
-      company.value === "V003" ||
-      company.value === "D020" ||
-      company === "F030" ||
-      company === "M020"
-    ) {
-      dispatch(getArticleForCompany_request(company.value, current_page));
-    } else {
       dispatch(getArticles_request(current_page));
-    }
   };
 
   //get articles for group - small company
@@ -97,38 +87,40 @@ const Order = (props) => {
   };
 
   const search = () => {
-    if (
-      company.value === "L001" ||
-      company.value === "V003" ||
-      company.value === "D020" ||
-      company === "F030" ||
-      company === "M020"
-    ) {
+    // if (
+    //   company.value === "L001" ||
+    //   company.value === "V003" ||
+    //   company.value === "D020" ||
+    //   company === "F030" ||
+    //   company === "M020"
+    // ) {
+    //   if (searchArtical.length > 0) {
+    //     dispatch(
+    //       searchArticleForCmp_request(
+    //         company.value,
+    //         searchArtical,
+    //         articles.current_page
+    //       )
+    //     );
+    //   } else {
+    //     dispatch(
+    //       getArticleForCompany_request(company.value, articles.current_page)
+    //     );
+    //     dispatch(getSuppForCmp_request(company.value));
+    //   }
+    // } else {
       if (searchArtical.length > 0) {
         dispatch(
-          searchArticleForCmp_request(
-            company.value,
-            searchArtical,
-            articles.current_page
-          )
-        );
-      } else {
-        dispatch(
-          getArticleForCompany_request(company.value, articles.current_page)
-        );
-        dispatch(getSuppForCmp_request(company.value));
-      }
-    } else {
-      if (searchArtical.length > 0) {
-        dispatch(
-          searchAllArticle_request(searchArtical, articles.current_page)
+          // searchAllArticle_request(searchArtical, articles.current_page)
+          searchAllArticle_request(searchArtical, 1)
         );
       } else {
         dispatch(getArticles_request(articles.current_page));
         dispatch(getGroups_request());
       }
-    }
+    // }
     setSearchArtical("");
+    
   };
 
   return (

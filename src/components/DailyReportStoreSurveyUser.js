@@ -16,13 +16,15 @@ function DailyReportStoreSurveyUser(props) {
 
   const [selectedDate, changeStateDate] = useState(new Date());
 
-  const [storesForComAndDate, storesForComAndDateAndCmpAndSop, isLoadedDate] =
-    useSelector((state) => [
-      state.storeSurveyReducer.storesForComAndDate,
-      state.storeSurveyReducer.storesForComAndDateAndCmpAndSop,
-      state.storeSurveyReducer.isLoadedData,
-    ]);
-
+  const storesForComAndDate = useSelector(
+    (state) => state.storeSurveyReducer.storesForComAndDate
+  );
+  const storesForComAndDateAndCmpAndSop = useSelector(
+    (state) => state.storeSurveyReducer.storesForComAndDateAndCmpAndSop
+  );
+  const isLoadedDate = useSelector((state) => {
+    return state.storeSurveyReducer.isLoadedData;
+  });
   const [companyName, changeCompanyName] = useState("");
   const [shopName, changeShopName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -47,7 +49,7 @@ function DailyReportStoreSurveyUser(props) {
   }, [storesForComAndDate]);
 
   useEffect(() => {
-    if (isLoadedDate) {
+    if (storesForComAndDateAndCmpAndSop.length > 0 && isLoading) {
       setIsLoading(false);
     }
     if (storesForComAndDateAndCmpAndSop !== undefined) {
@@ -169,7 +171,7 @@ function DailyReportStoreSurveyUser(props) {
                 )}
                 {storesForComAndDate.length === 0 ? (
                   <tr>
-                    <td>Nema podataka</td>
+                    <td colSpan={3}>Nema podataka</td>
                   </tr>
                 ) : (
                   <tr></tr>

@@ -31,10 +31,14 @@ const DailyReport = (props) => {
       user: storageUser.operater,
     };
     dispatch(getDailyReport_request(details));
-    setIsLoading(false);
   }, []);
 
+  useEffect(() => {
+    if (invoices.length > 0) setIsLoading(false);
+  }, [invoices]);
+
   const changeDate = (date) => {
+    setIsLoading(true);
     storageUser = JSON.parse(localStorage.getItem("user"));
     let details = {
       date: moment(date).format("YYYY-MM-DD"),

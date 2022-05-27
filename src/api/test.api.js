@@ -1,9 +1,7 @@
 import axios from "axios";
 
 var apiUrl =
-  window.location.href.indexOf("mms1.mils.me") >= 0
-    ? "https://laravel.mms1.mils.me"
-    : "http://api.mms.test";
+  true >= 0 ? "https://laravel.mms1.mils.me" : "http://api.mmsnew.test";
 // var apiUrl = "http://127.0.0.1:8000";
 var config = {
   headers: { Authorization: "bearer " + localStorage.getItem("token") },
@@ -109,10 +107,10 @@ export function getMaxInvoiceId_api() {
 
 //invoice routes
 export function setInvoiceHeader_api(details) {
-  return axios.post(apiUrl + "/setInvoiceHeader", details.payload, config);
+  // return axios.post(apiUrl + "/setInvoiceHeader", details.payload, config);
 }
 export function setInvoiceItem_api(details) {
-  return axios.post(apiUrl + "/setInvoiceItem", details.payload, config);
+  // return axios.post(apiUrl + "/setInvoiceItem", details.payload, config);
 }
 
 // get result(saldo) - for all time
@@ -167,25 +165,25 @@ export function getStoreSurvey_api() {
 }
 //post store survey
 export function postStoreSurvey_api(details) {
-  return axios.post(
-    apiUrl + "/setStoreSurveyHistoryItem",
-    details.payload,
-    config
-  );
+  // return axios.post(
+  //   apiUrl + "/setStoreSurveyHistoryItem",
+  //   details.payload,
+  //   config
+  // );
 }
 
 //post store survey
 export function postStoreSurveyAdmin_api(details) {
-  return axios.post(
-    apiUrl + "/setStoreSurveyAdminHistoryItem",
-    details.payload,
-    config
-  );
+  // return axios.post(
+  //   apiUrl + "/setStoreSurveyAdminHistoryItem",
+  //   details.payload,
+  //   config
+  // );
 }
 
 //post schedule history item
 export function postScheduleHist_api(details) {
-  return axios.post(apiUrl + "/setScheduleHist", details.payload);
+  // return axios.post(apiUrl + "/setScheduleHist", details.payload);
 }
 //get all users for report - admin
 export function getUsersForReport_api() {

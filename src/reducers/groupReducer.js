@@ -23,6 +23,12 @@ export default function groupReducer(state = initialState, action) {
                 loading: false,
                 error: action.payload
             }
+        case groupConstants.GROUPS_RESET:
+        return {
+            ...state,
+            loading: false,
+            groups: [],
+        }
         default:
             return state
     }

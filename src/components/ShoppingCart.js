@@ -13,7 +13,12 @@ import {
 import { postStoryServey_request } from "../actions/storeSurvey.action";
 import { writeScheduleHist_request } from "../actions/schedule.action";
 import ShoppingCartItem from "./singleComponent/ShoppingCartItem";
-import { Button, IconButton } from "@material-ui/core";
+import { Button } from "@material-ui/core";
+import { logout_success } from "../actions/login.actions";
+import {
+  resetSelectedCompany_success,
+  resetSelectedShop_success,
+} from "../actions/company.actions";
 
 const ShoppingCart = (props) => {
   const dispatch = useDispatch();
@@ -63,7 +68,7 @@ const ShoppingCart = (props) => {
     );
   useEffect(() => {
     if (!JSON.parse(localStorage.getItem("survey"))?.length) {
-      goToHomePage();
+      goTo("homePage");
     }
     navigator.geolocation.getCurrentPosition(function (position) {
       localStorage.setItem("latitude", position.coords.latitude);
@@ -251,21 +256,24 @@ const ShoppingCart = (props) => {
       date: _date,
     };
 
-    localStorage.removeItem("survey");
-    localStorage.removeItem("latitude");
-    localStorage.removeItem("longitude");
-    localStorage.removeItem("cart");
-
     dispatch(setInvoiceHeader_request(header));
     dispatch(postStoryServey_request(surveyObject));
     dispatch(writeScheduleHist_request(sheduleItem));
-    dispatch(resetShoppingCart_success());
 
-    goToHomePage();
+    localStorage.removeItem("company");
+    localStorage.removeItem("shop");
+    localStorage.removeItem("latitude");
+    localStorage.removeItem("longitude");
+    localStorage.removeItem("survey");
+    localStorage.removeItem("cart");
+    dispatch(resetShoppingCart_success());
+    dispatch(resetSelectedCompany_success());
+    dispatch(resetSelectedShop_success());
+    goTo("homePage");
   };
 
-  const goToHomePage = () => {
-    let path = userPath.homePage;
+  const goTo = (page) => {
+    let path = userPath[page];
     props.history.push(path);
   };
 

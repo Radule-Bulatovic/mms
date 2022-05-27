@@ -43,7 +43,7 @@ const ChooseShop = (props) => {
       }
     }
     setIsLoading(false);
-  }, [user, getCompany_request, getShopsForCompany_request, storageCompany]);
+  }, []);
 
   const changeCompany = (company) => {
     localStorage.setItem("company", JSON.stringify(company));
@@ -59,7 +59,11 @@ const ChooseShop = (props) => {
     if (user !== undefined) {
       dispatch(getShopsForCompany_request(company.value));
     } else {
-      dispatch(getShopsForCompany_request(storageCompany.value));
+      dispatch(
+        getShopsForCompany_request(
+          JSON.parse(localStorage.getItem("company")).value
+        )
+      );
     }
   };
 
