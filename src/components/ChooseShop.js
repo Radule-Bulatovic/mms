@@ -57,9 +57,9 @@ const ChooseShop = (props) => {
     }
 
     if (user !== undefined) {
-      getShopsForCompany_request(company.value);
+      dispatch(getShopsForCompany_request(company.value));
     } else {
-      getShopsForCompany_request(storageCompany.value);
+      dispatch(getShopsForCompany_request(storageCompany.value));
     }
   };
 
@@ -146,7 +146,7 @@ const ChooseShop = (props) => {
                 </div>
                 <div className="form-group">
                   <Select
-                    components={{ MenuList }}
+                    components={shops.length ? { MenuList } : null}
                     placeholder="Izaberite objekat"
                     value={
                       selectedShop?.value
